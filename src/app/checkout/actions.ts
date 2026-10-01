@@ -9,7 +9,7 @@ import {
   type OrderItem,
 } from "@/lib/orders";
 import { sendOrderConfirmation } from "@/lib/mailgun";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/env";
 
 export type CheckoutState = {
@@ -118,8 +118,11 @@ export async function placeOrder(
   }
 
   if (isSupabaseConfigured) {
-    const supabase = await createClient();
-    const { error } = await supabase.from("orders").insert({
+    // The anon key cannot INSERT — the orders table has RLS on with no
+    // insert policy. Writes go through the service-role key, which is
+    // only ever reachable from this server action.
+    const admin = createAdminClient();
+    const { error } = await admin.from("orders").insert({
       id: order.id,
       reference: order.reference,
       user_id: order.user_id,

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/env";
 import { money, type Order } from "@/lib/orders";
 
@@ -18,9 +18,16 @@ export default async function OrderPage({
   const { reference } = await params;
 
   if (!isSupabaseConfigured) notFound();
-  const supabase = await createClient();
 
-  const { data: row } = await supabase
+  /* The six-character reference (AAYA-XXXXXX) is the access credential.
+     Signed-in customers are also checked against their user_id. Guests can
+     only reach this page with the link from their confirmation email.
+
+     This has to read with the service-role key: the anon key cannot see
+     guest rows, because the row-level security policy compares
+     auth.uid() to user_id, and a guest order has no user_id. */
+  const admin = createAdminClient();
+  const { data: row } = await admin
     .from("orders")
     .select("*")
     .eq("reference", reference)
@@ -29,9 +36,11 @@ export default async function OrderPage({
   if (!row) notFound();
   const order = row as Order;
 
-  const { data: userData } = await supabase.auth.getUser();
-  if (order.user_id && order.user_id !== userData.user?.id) {
-    notFound();
+  // A signed-in customer may only open their own order.
+  if (order.user_id) {
+    const supabase = await createClient();
+    const { data: userData } = await supabase.auth.getUser();
+    if (order.user_id !== userData.user?.id) notFound();
   }
 
   return (
