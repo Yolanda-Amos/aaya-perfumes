@@ -1,0 +1,96 @@
+import type { Product } from "../types";
+
+/** JAMEELAH GREEN → MUKHALLAT. */
+export const PART_TWO: Product[] = [
+  {
+    id: "jameelah-green", slug: "jameelah-green", name: "Jameelah Green", family: "floral",
+    blurb: "Green foliage over jasmine — for people who like to be near you.",
+    notes: { top: "Violet leaf, lemon", heart: "Jasmine, tuberose", base: "Vetiver, musk" },
+    size_ml: 24, price_minor: 1575, compare_minor: 2100, stock: 17, hue: "#7d9c72",
+    audience: "women", intensity: 2, seasons: ["summer", "all-year"], occasion: ["daily", "evening"],
+  },
+  {
+    id: "jameelah-red", slug: "jameelah-red", name: "Jameelah Red", family: "floral",
+    blurb: "Rose and warm spice, deeper and more confident than the green one.",
+    notes: { top: "Pink pepper, plum", heart: "Rose, geranium", base: "Amber, oud" },
+    size_ml: 24, price_minor: 1575, compare_minor: 2100, stock: 16, hue: "#b03a48",
+    audience: "women", intensity: 3, seasons: ["winter", "all-year"], occasion: ["evening", "occasion"],
+  },
+  {
+    id: "jazi", slug: "jazi", name: "Jazi", family: "aquatic",
+    blurb: "Sea air and salt — a coastline in the middle of the city.",
+    notes: { top: "Grapefruit, sea notes", heart: "Marine, sage", base: "Driftwood, ambergris" },
+    size_ml: 24, price_minor: 1575, compare_minor: 2100, stock: 21, hue: "#5b7f8c",
+    audience: "unisex", intensity: 2, seasons: ["summer"], occasion: ["daily", "evening"],
+  },
+  {
+    id: "joey", slug: "joey", name: "Joey", family: "fresh",
+    blurb: "Citrus and mint, deliberately uncomplicated.",
+    notes: { top: "Lemon, mint", heart: "Lavender, petitgrain", base: "White musk, cedar" },
+    size_ml: 24, price_minor: 1575, compare_minor: 2100, stock: 27, hue: "#9fc1a9",
+    audience: "men", intensity: 1, seasons: ["summer"], occasion: ["daily", "work"],
+  },
+  {
+    id: "juliet", slug: "juliet", name: "Juliet", family: "floral",
+    blurb: "A proper rose, modernised with pear and a cool woody base.",
+    notes: { top: "Pear, raspberry", heart: "Damask rose, peony", base: "Cedar, musk" },
+    size_ml: 24, price_minor: 1575, compare_minor: 2100, stock: 24, hue: "#e0a6b0",
+    audience: "women", intensity: 2, seasons: ["all-year"], occasion: ["evening", "daily"],
+  },
+  {
+    id: "laeqa", slug: "laeqa", name: "Laeqa", family: "sweet",
+    blurb: "Warm and edible — dates, honey and a soft musk finish.",
+    notes: { top: "Honey, orange", heart: "Dates, jasmine", base: "Musk, vanilla" },
+    size_ml: 24, price_minor: 1575, compare_minor: 2100, stock: 20, hue: "#dba86a",
+    audience: "unisex", intensity: 2, seasons: ["winter"], occasion: ["evening", "daily"],
+  },
+  {
+    id: "lamsa", slug: "lamsa", name: "Lamsa", family: "woody",
+    blurb: "Sandalwood forward, almost like a cream you can smell.",
+    notes: { top: "Coconut, bergamot", heart: "Sandalwood, iris", base: "Cashmere, musk" },
+    size_ml: 24, price_minor: 1575, compare_minor: 2100, stock: 22, hue: "#c4a882",
+    audience: "unisex", intensity: 1, seasons: ["all-year"], occasion: ["work", "daily"],
+  },
+  {
+    id: "lovely", slug: "lovely", name: "Lovely", family: "floral",
+    blurb: "Sweet floral, soft in the middle, and it lasts all evening.",
+    notes: { top: "Lychee, magnolia", heart: "Peony, freesia", base: "Musk, vanilla" },
+    size_ml: 24, price_minor: 1575, compare_minor: 2100, stock: 29, hue: "#ecb7c4",
+    audience: "women", intensity: 2, seasons: ["summer", "all-year"], occasion: ["daily", "evening"],
+  },
+  {
+    id: "mufaddal", slug: "mufaddal", name: "Mufaddal", family: "oud",
+    blurb: "Oud softened with rose — a gentler way into the category.",
+    notes: { top: "Saffron, rose", heart: "Patchouli, oud", base: "Amber, sandalwood" },
+    size_ml: 24, price_minor: 1575, compare_minor: 2100, stock: 18, hue: "#7b4b52",
+    audience: "men", intensity: 3, seasons: ["winter"], occasion: ["occasion", "evening"],
+  },
+  {
+    id: "mufaddal-oud", slug: "mufaddal-oud", name: "Mufaddal Oud", family: "oud",
+    blurb: "The second Mufaddal — drier, with less rose and more smoke.",
+    notes: { top: "Black pepper", heart: "Oud, leather", base: "Sandalwood, amber" },
+    size_ml: 24, price_minor: 1575, compare_minor: 2100, stock: 12, hue: "#6b4a3a",
+    audience: "unisex", intensity: 3, seasons: ["winter"], occasion: ["occasion", "evening"],
+  },
+  {
+    id: "mukhallat", slug: "mukhallat", name: "Mukhallat", family: "sweet",
+    blurb: "The classic Arabic sweet — dense, honeyed, unmistakable.",
+    notes: { top: "Cinnamon, lime", heart: "Dates, rose", base: "Honey, oud, musk" },
+    size_ml: 24, price_minor: 1575, compare_minor: 2100, stock: 14, hue: "#c98f4e",
+    audience: "unisex", intensity: 3, seasons: ["winter"], occasion: ["occasion", "evening"],
+  },
+  {
+    id: "musk-bushra", slug: "musk-bushra", name: "Musk Bushra", family: "musk",
+    blurb: "A clean white musk that lasts longer than the price suggests.",
+    notes: { top: "Green mandarin", heart: "Musk, jasmine", base: "Sandalwood, vanilla" },
+    size_ml: 24, price_minor: 1575, compare_minor: 2100, stock: 26, hue: "#e6e0d5",
+    audience: "unisex", intensity: 1, seasons: ["all-year"], occasion: ["work", "daily"],
+  },
+  {
+    id: "musk-tahara", slug: "musk-tahara", name: "Musk Tahara", family: "musk",
+    blurb: "The purest musk on the shelf. Nothing added that does not need to be.",
+    notes: { top: "Violet leaf", heart: "White musk", base: "Ambrette, sandalwood" },
+    size_ml: 24, price_minor: 1575, compare_minor: 2100, stock: 28, hue: "#efe9df",
+    audience: "unisex", intensity: 1, seasons: ["all-year"], occasion: ["work", "daily"],
+  },
+];

@@ -1,0 +1,80 @@
+export type Note = { top: string; heart: string; base: string };
+
+/** Olfactive families. The quiz scores against these. */
+export type Family =
+  | "oud"
+  | "floral"
+  | "fresh"
+  | "woody"
+  | "musk"
+  | "sweet"
+  | "spicy"
+  | "aquatic";
+
+export type Audience = "women" | "men" | "unisex";
+export type Season = "summer" | "winter" | "all-year";
+export type Occasion = "daily" | "work" | "evening" | "occasion";
+
+export type Product = {
+  id: string;
+  slug: string;
+  name: string;
+  family: Family;
+  /** Short line for the card — a sentence, not a paragraph. */
+  blurb: string;
+  notes: Note;
+  size_ml: number;
+  /** Minor units: 1575 = Dhs 15.75. */
+  price_minor: number;
+  /** Struck-through "was" price, in minor units. */
+  compare_minor: number;
+  stock: number;
+  /** Glass tint for the bottle illustration. */
+  hue: string;
+  /** Drives the men / women / unisex filter. */
+  audience: Audience;
+  /** 1 = close to skin, 3 = fills a room. Feeds the quiz. */
+  intensity: 1 | 2 | 3;
+  seasons: Season[];
+  occasion: Occasion[];
+};
+
+export const AUDIENCE_LABEL: Record<Audience, string> = {
+  women: "For her",
+  men: "For him",
+  unisex: "Unisex",
+};
+
+export const FAMILY_LABEL: Record<Family, string> = {
+  oud: "Oud",
+  floral: "Floral",
+  fresh: "Fresh",
+  woody: "Woody",
+  musk: "Musk",
+  sweet: "Sweet",
+  spicy: "Spicy",
+  aquatic: "Aquatic",
+};
+
+export const SEASON_LABEL: Record<Season, string> = {
+  summer: "Summer",
+  winter: "Winter",
+  "all-year": "All year",
+};
+
+export const OCCASION_LABEL: Record<Occasion, string> = {
+  daily: "Every day",
+  work: "The office",
+  evening: "Evenings out",
+  occasion: "Occasions",
+};
+
+export const CURRENCY = "AED";
+
+export function formatPrice(minor: number) {
+  return new Intl.NumberFormat("en-AE", {
+    style: "currency",
+    currency: CURRENCY,
+    minimumFractionDigits: 2,
+  }).format(minor / 100);
+}

@@ -1,0 +1,187 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------
+   Aaya Perfume — design tokens
+   Warm ivory + gold, espresso ink, a script wordmark.
+---------------------------------------------------------------- */
+@theme {
+  --color-ivory: #fbf7f1;
+  --color-porcelain: #ffffff;
+  --color-sand: #f1e9de;
+  --color-line: #e3d9cb;
+  --color-espresso: #1e1a17;
+  --color-cocoa: #3a342e;
+  --color-taupe: #6e655b;
+  --color-gold: #b08d57;
+  --color-gold-ink: #8a6a3b; /* gold dark enough for text on ivory */
+  --color-gold-soft: #d9bd8b;
+
+  --font-display: var(--font-cormorant), "Times New Roman", serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+  --font-script: var(--font-pinyon), "Snell Roundhand", cursive;
+}
+
+:root {
+  color-scheme: light;
+  --rule: var(--color-line);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-ivory);
+  color: var(--color-cocoa);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.65;
+  /* faint warm bloom, the way light falls across a marble counter */
+  background-image:
+    radial-gradient(
+      70rem 40rem at 82% -12%,
+      color-mix(in oklab, var(--color-gold) 14%, transparent),
+      transparent 68%
+    ),
+    radial-gradient(
+      50rem 36rem at -6% 108%,
+      color-mix(in oklab, var(--color-sand) 70%, transparent),
+      transparent 70%
+    );
+  background-attachment: fixed;
+}
+
+/* --- typographic helpers ------------------------------------- */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+}
+
+/* The wordmark and small flourishes. Reserved — never for paragraphs. */
+.font-script {
+  font-family: var(--font-script);
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.measure { max-width: 62ch; }
+.measure-tight { max-width: 44ch; }
+
+.tag {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--color-taupe);
+}
+
+.rule {
+  border: 0;
+  border-top: 1px solid var(--rule);
+}
+
+/* --- interactive base --------------------------------------- */
+a, button, [role="button"], summary, label[for] { cursor: pointer; }
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-gold-ink);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* --- signature: sillage reveal on product cards -------------- */
+.sillage {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sillage > div { overflow: hidden; }
+.group:hover .sillage,
+.group:focus-within .sillage { grid-template-rows: 1fr; }
+
+/* --- page-load reveal, one orchestrated moment --------------- */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+.rise { animation: rise 900ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@keyframes draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.draw-x { transform-origin: left; animation: draw 1200ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@keyframes swirl {
+  from { transform: rotate(-1.5deg) scale(0.96); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+.swirl { animation: swirl 1400ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .rise, .draw-x, .swirl, .sillage { animation: none; transition: none; }
+  .sillage { grid-template-rows: 1fr; }
+}
+
+/* --- form fields --------------------------------------------- */
+.field {
+  width: 100%;
+  background: var(--color-porcelain);
+  border: 1px solid var(--color-line);
+  border-radius: 2px;
+  padding: 0.7rem 0.85rem;
+  color: var(--color-cocoa);
+  font-size: 1rem; /* keeps iOS from zooming on focus */
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+.field::placeholder { color: color-mix(in oklab, var(--color-taupe) 70%, transparent); }
+.field:hover { border-color: color-mix(in oklab, var(--color-gold) 55%, transparent); }
+.field:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-gold) 22%, transparent);
+}
+.field[aria-invalid="true"] { border-color: #b4573f; }
+
+/* --- buttons -------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px; /* touch target */
+  padding: 0.7rem 1.5rem;
+  border-radius: 2px;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  border: 1px solid transparent;
+  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+.btn-primary { background: var(--color-espresso); color: var(--color-ivory); }
+.btn-primary:hover:not(:disabled) { background: #2f2823; }
+.btn-ghost {
+  border-color: var(--color-line);
+  background: var(--color-porcelain);
+  color: var(--color-cocoa);
+}
+.btn-ghost:hover:not(:disabled) {
+  border-color: var(--color-gold);
+  background: color-mix(in oklab, var(--color-gold) 8%, var(--color-porcelain));
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* --- light-on-dark sections (espresso panels) ---------------- */
+.on-dark { background: var(--color-espresso); color: var(--color-ivory); }
+.on-dark .tag { color: color-mix(in oklab, var(--color-ivory) 62%, transparent); }
+.on-dark .rule { border-top-color: rgba(255, 255, 255, 0.14); }
+.on-dark .btn-primary { background: var(--color-ivory); color: var(--color-espresso); }
+.on-dark .btn-primary:hover:not(:disabled) { background: #fff; }
+.on-dark .btn-ghost {
+  background: transparent;
+  color: var(--color-ivory);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+.on-dark .btn-ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--color-gold-soft);
+}
+
+
