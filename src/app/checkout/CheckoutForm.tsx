@@ -130,7 +130,7 @@ export function EmptyBag() {
     <div className="mx-auto max-w-2xl px-6 py-28 text-center">
       <h1 className="font-display text-5xl">Your bag is empty</h1>
       <p className="mx-auto mt-4 measure text-taupe">
-        Nothing in here yet. Every roll-on is Dhs 15.75, so start with two and
+        Nothing in here yet. Every roll-on is ₦12,500, so start with two and
         see which one you reach for on day three.
       </p>
       <Link href="/#fragrances" className="btn btn-primary mt-9">

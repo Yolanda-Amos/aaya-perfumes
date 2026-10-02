@@ -1,6 +1,6 @@
 import type { Product } from "../types";
 
-/** AFZAL → JAMEELAH RED. All Dhs 15.75 (was 21.00), 24ml roll-on. */
+/** AFZAL → JAMEELAH RED. All ₦12,500 (was ₦15,000), 24ml roll-on. */
 export const PART_ONE: Product[] = [
   {
     id: "afzal", slug: "afzal", name: "Afzal", family: "woody",

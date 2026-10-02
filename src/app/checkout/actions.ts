@@ -209,7 +209,7 @@ export async function sendTestEmail(
     user_id: null,
     customer_name: "Test Customer",
     customer_email: email,
-    shipping_address: "12 Al Wasl Road, Dubai",
+    shipping_address: "12 Allen Avenue, Ikeja, Lagos",
     items,
     subtotal_minor: subtotal,
     shipping_minor: shippingFor(subtotal),

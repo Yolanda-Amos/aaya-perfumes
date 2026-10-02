@@ -3,7 +3,7 @@ export type OrderItem = {
   name: string;
   slug: string;
   size_ml: number;
-  /** Minor units: 1575 = Dhs 15.75 */
+  /** Minor units in kobo: 1250000 = ₦12,500 */
   unit_minor: number;
   qty: number;
 };
@@ -43,7 +43,7 @@ export function shippingFor(subtotalMinor: number) {
     : FLAT_SHIPPING_MINOR;
 }
 
-/** Naira for display: ₦12,500 — never AED or USD on the storefront. */
+/** Naira for display: ₦12,500 — never Dhs, USD or AED on the storefront. */
 export function money(minor: number) {
   return new Intl.NumberFormat("en-NG", {
     style: "currency",

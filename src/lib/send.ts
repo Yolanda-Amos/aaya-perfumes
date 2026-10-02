@@ -16,7 +16,7 @@ import type { Order } from "@/lib/orders";
 
 type Result = { sent: boolean; reason?: "not-configured" | "provider" };
 
-const FROM_FALLBACK = "Aaya Perfumes <orders@example.com>";
+const FROM_FALLBACK = "Aaya Perfume <orders@example.com>";
 
 function from(): string {
   return (

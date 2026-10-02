@@ -66,7 +66,7 @@ Everything about a perfume lives in `src/lib/types.ts` as one `Product` type:
 | `seasons` | "Hot months" vs "Cold months" answers |
 | `occasion` | "Every day" vs "Occasions that matter" answers |
 | `notes` | the top/heart/base pyramid on hover |
-| `price_minor` | 1575 = Dhs 15.75 — always minor units, never floats |
+| `price_minor` | kobo: 1250000 = ₦12,500 — minor units, never floats |
 | `stock` | 0 means sold out; the quiz never recommends it |
 
 Products are split across `src/lib/data/part-one|two|three.ts` purely to keep

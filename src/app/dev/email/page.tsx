@@ -3,7 +3,7 @@ import Link from "next/link";
 import TestEmailForm from "./TestEmailForm";
 import { isEmailConfigured } from "@/lib/env";
 
-export const metadata: Metadata = { title: "Email test — Aaya Perfumes" };
+export const metadata: Metadata = { title: "Email test — Aaya Perfume" };
 export const dynamic = "force-dynamic";
 
 /** A small helper for checking the confirmation email without an order. */

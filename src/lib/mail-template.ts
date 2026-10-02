@@ -21,7 +21,7 @@ function shell(title: string, inner: string) {
     ${inner}
     <p style="font-size:12px;color:${TAUPE};margin-top:32px;border-top:1px solid ${LINE};
       padding-top:16px;line-height:1.7;">
-      Aaya Perfumes · Dubai, UAE<br/>
+      Aaya Perfume · Lagos, Nigeria<br/>
       <a href="${siteUrl}" style="color:${GOLD};">${siteUrl.replace(/^https?:\/\//, "")}</a>
     </p>
   </div>
@@ -82,11 +82,11 @@ Total: ${money(order.total_minor)}
 
 Two samples are included. Track your order at ${siteUrl}/orders/${order.reference}
 
-Aaya Perfumes · Dubai, UAE`;
+Aaya Perfume · Lagos, Nigeria`;
 
   return {
     to: order.customer_email,
-    subject: `Order ${order.reference} confirmed — Aaya Perfumes`,
+    subject: `Order ${order.reference} confirmed — Aaya Perfume`,
     html,
     text,
   };

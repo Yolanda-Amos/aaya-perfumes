@@ -24,7 +24,7 @@ export type Product = {
   blurb: string;
   notes: Note;
   size_ml: number;
-  /** Minor units: 1575 = Dhs 15.75. */
+  /** Minor units in kobo: 1250000 = ₦12,500. */
   price_minor: number;
   /** Struck-through "was" price, in minor units. */
   compare_minor: number;
