@@ -59,10 +59,11 @@ export default function CheckoutClient({
   if (lines.length === 0) return <EmptyBag />;
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-16">
-      <h1 className="font-display text-5xl">Checkout</h1>
+    <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8 sm:py-16">
+      <p className="eyebrow">Almost yours</p>
+      <h1 className="mt-3 font-display text-4xl sm:text-5xl">Checkout</h1>
 
-      <div className="mt-12 grid gap-14 lg:grid-cols-[1.2fr_0.8fr]">
+      <div className="mt-10 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-14">
         <Form
           lines={lines}
           err={state.fieldErrors ?? {}}

@@ -10,7 +10,7 @@ import type { CheckoutState } from "@/app/checkout/actions";
 const fields = [
   { name: "name", label: "Full name", autoComplete: "name", placeholder: "Amara Okonkwo", span: true },
   { name: "email", label: "Email", type: "email", inputMode: "email" as const, autoComplete: "email", placeholder: "you@example.com", span: true },
-  { name: "address", label: "Delivery address", autoComplete: "street-address", placeholder: "12 Al Wasl Road, Dubai", span: true },
+  { name: "address", label: "Delivery address", autoComplete: "street-address", placeholder: "12 Allen Avenue, Ikeja, Lagos", span: true },
 ];
 
 const paymentFields = [
@@ -62,9 +62,9 @@ function Form({
       {state.error && (
         <p
           role="alert"
-          className="border px-4 py-3 text-[0.9rem] text-[#d98b7a]"
+          className="rounded-xl border px-4 py-3 text-[0.9rem] text-[#c2705f]"
           style={{
-            borderColor: "color-mix(in oklab, #d98b7a 45%, transparent)",
+            borderColor: "color-mix(in oklab, #c2705f 40%, transparent)",
           }}
         >
           {state.error}
@@ -107,7 +107,7 @@ export function Confirmed({
 }) {
   return (
     <div className="mx-auto max-w-2xl px-6 py-28 text-center">
-      <p className="tag">Order confirmed</p>
+      <p className="eyebrow">Order confirmed</p>
       <h1 className="mt-4 font-display text-5xl">Thank you.</h1>
       <p className="mx-auto mt-5 measure text-taupe">
         We have emailed your receipt to {signedInEmail ?? "your inbox"}. Your

@@ -1,36 +1,52 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import ProductCard from "./ProductCard";
-import {
-  CATALOGUE,
-  FAMILY_LABEL,
-  type Audience,
-  type Family,
-  type Product,
-} from "@/lib/products";
+import { CATALOGUE, FAMILY_LABEL, type Audience, type Family, type Product } from "@/lib/products";
 
 type Filter = "all" | Family | Audience;
 
 const FILTERS: { id: Filter; label: string }[] = [
   { id: "all", label: "Everything" },
+  { id: "floral", label: FAMILY_LABEL.floral },
+  { id: "fresh", label: FAMILY_LABEL.fresh },
+  { id: "sweet", label: FAMILY_LABEL.sweet },
+  { id: "oud", label: FAMILY_LABEL.oud },
+  { id: "woody", label: FAMILY_LABEL.woody },
+  { id: "musk", label: FAMILY_LABEL.musk },
+  { id: "spicy", label: FAMILY_LABEL.spicy },
   { id: "unisex", label: "Unisex" },
   { id: "women", label: "For her" },
   { id: "men", label: "For him" },
-  { id: "oud", label: FAMILY_LABEL.oud },
-  { id: "floral", label: FAMILY_LABEL.floral },
-  { id: "woody", label: FAMILY_LABEL.woody },
-  { id: "musk", label: FAMILY_LABEL.musk },
-  { id: "sweet", label: FAMILY_LABEL.sweet },
-  { id: "spicy", label: FAMILY_LABEL.spicy },
-  { id: "fresh", label: FAMILY_LABEL.fresh },
-  { id: "aquatic", label: FAMILY_LABEL.aquatic },
 ];
 
-/** The collection, with the shelf filtered by audience or family. */
+/** The collection, filtered by family or audience. Two-up on mobile. */
 export default function ShopGrid({ products }: { products: Product[] }) {
-  const [filter, setFilter] = useState<Filter>("all");
+  return (
+    <Suspense fallback={<GridFallback />}>
+      <Grid products={products} />
+    </Suspense>
+  );
+}
+
+function GridFallback() {
+  return (
+    <div className="h-40 animate-pulse rounded-[--radius-card] bg-sage" />
+  );
+}
+
+function Grid({ products }: { products: Product[] }) {
+  const params = useSearchParams();
   const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    const q = params.get("q");
+    if (q) setQuery(q);
+  }, [params]);
+
+  // The navbar search prefills this via ?q=rose.
+  const [filter, setFilter] = useState<Filter>("all");
 
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -50,12 +66,8 @@ export default function ShopGrid({ products }: { products: Product[] }) {
 
   return (
     <div>
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-        <div
-          className="-mx-1 flex flex-wrap gap-2"
-          role="group"
-          aria-label="Filter fragrances"
-        >
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="-mx-1 flex flex-wrap gap-2" role="group" aria-label="Filter fragrances">
           {FILTERS.map((f) => {
             const active = filter === f.id;
             return (
@@ -64,10 +76,10 @@ export default function ShopGrid({ products }: { products: Product[] }) {
                 type="button"
                 onClick={() => setFilter(f.id)}
                 aria-pressed={active}
-                className={`rounded-full border px-3.5 py-1.5 text-[0.8rem] transition-colors duration-200 ${
+                className={`rounded-full border px-4 py-2 text-[0.8rem] transition-colors duration-200 ${
                   active
                     ? "border-espresso bg-espresso text-ivory"
-                    : "border-line bg-porcelain text-cocoa hover:border-gold"
+                    : "border-line bg-cream text-espresso/80 hover:border-sage-mid"
                 }`}
               >
                 {f.label}
@@ -76,7 +88,7 @@ export default function ShopGrid({ products }: { products: Product[] }) {
           })}
         </div>
 
-        <label className="flex items-center gap-2 lg:w-64">
+        <label className="lg:w-64">
           <span className="sr-only">Search fragrances</span>
           <input
             type="search"
@@ -93,7 +105,10 @@ export default function ShopGrid({ products }: { products: Product[] }) {
       </p>
 
       {visible.length === 0 ? (
-        <div className="mt-10 border border-dashed p-12 text-center" style={{ borderColor: "var(--rule)" }}>
+        <div
+          className="mt-10 rounded-[--radius-card] border border-dashed p-12 text-center"
+          style={{ borderColor: "var(--rule)" }}
+        >
           <p className="font-display text-2xl">Nothing matches that</p>
           <p className="mx-auto mt-2 max-w-sm text-[0.9rem] text-taupe">
             Try a different family, or clear the search to see all{" "}

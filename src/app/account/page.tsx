@@ -30,7 +30,7 @@ export default async function AccountPage() {
 
   if (!isSupabaseConfigured) {
     return (
-      <div className="mx-auto max-w-xl px-6 py-24 text-center">
+      <div className="mx-auto max-w-md px-5 py-20 text-center sm:px-8">
         <h1 className="font-display text-4xl">Accounts are not switched on yet</h1>
         <p className="mt-4 measure text-taupe">
           Add your Supabase project keys to <code>.env.local</code> and this page
@@ -45,7 +45,7 @@ export default async function AccountPage() {
 
   if (!user) {
     return (
-      <div className="mx-auto max-w-md px-6 py-24">
+      <div className="mx-auto max-w-md px-5 py-20 sm:px-8">
         <h1 className="font-display text-4xl">Sign in</h1>
         <p className="mt-4 measure text-taupe">
           Sign in to see your orders and check out faster. We only use your Google
@@ -68,7 +68,7 @@ export default async function AccountPage() {
         <SignOutButton />
       </div>
 
-      <h2 className="mt-14 border-b pb-3 tag" style={{ borderColor: "var(--rule)" }}>
+      <h2 className="mt-14 border-b pb-3 eyebrow" style={{ borderColor: "var(--rule)" }}>
         Your orders
       </h2>
 
@@ -94,7 +94,7 @@ export default async function AccountPage() {
               <p className="text-[0.9rem]">{money(order.total_minor)}</p>
               <Link
                 href={`/orders/${order.reference}`}
-                className="text-[0.9rem] text-gold-soft underline-offset-4 hover:underline"
+                className="text-[0.9rem] text-sage-deep underline-offset-4 hover:underline"
               >
                 View order
               </Link>

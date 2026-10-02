@@ -65,6 +65,8 @@ const paths: Record<string, React.ReactNode> = {
     </>
   ),
   check: <path d="M4.5 12.5 9.5 17.5 19.5 6.5" />,
+  menu: <path d="M4 7h16M4 12h16M4 17h16" />,
+  close: <path d="M6 6l12 12M18 6L6 18" />,
 };
 
 export default function Icon({

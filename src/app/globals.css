@@ -2,23 +2,34 @@
 
 /* ---------------------------------------------------------------
    Aaya Perfume — design tokens
-   Warm ivory + gold, espresso ink, a script wordmark.
+   Fresh linen and sunlight. Ivory and sage dominate; rose appears
+   only as a warm accent. Nothing here should read as loud.
 ---------------------------------------------------------------- */
 @theme {
-  --color-ivory: #fbf7f1;
-  --color-porcelain: #ffffff;
-  --color-sand: #f1e9de;
-  --color-line: #e3d9cb;
-  --color-espresso: #1e1a17;
-  --color-cocoa: #3a342e;
-  --color-taupe: #6e655b;
-  --color-gold: #b08d57;
-  --color-gold-ink: #8a6a3b; /* gold dark enough for text on ivory */
-  --color-gold-soft: #d9bd8b;
+  --color-ivory: #faf7f2;
+  --color-cream: #fffefb;
+  --color-sage: #eef3ed;
+  --color-sage-mid: #8fa58f;
+  --color-sage-deep: #5f7362;
+  --color-rose: #d9b8b0;
+  --color-rose-soft: #e9d3cd;
+  --color-peach: #f3ddd0;
+  --color-espresso: #302824;
+  /* Body-copy tone: espresso softened just enough for long paragraphs. */
+  --color-cocoa: #4a423b;
+  --color-taupe: #80756d;
+  --color-line: #e8e1d8;
+  --color-line-soft: #f0ebe4;
 
-  --font-display: var(--font-cormorant), "Times New Roman", serif;
-  --font-body: var(--font-inter), system-ui, sans-serif;
-  --font-script: var(--font-pinyon), "Snell Roundhand", cursive;
+  --font-display: var(--font-dmserif), Georgia, serif;
+  --font-body: var(--font-manrope), system-ui, sans-serif;
+
+  --radius-card: 1.25rem;
+
+  --shadow-soft: 0 1px 2px rgb(48 40 36 / 0.03),
+    0 8px 24px -8px rgb(48 40 36 / 0.07);
+  --shadow-lift: 0 2px 4px rgb(48 40 36 / 0.04),
+    0 18px 40px -14px rgb(48 40 36 / 0.14);
 }
 
 :root {
@@ -33,113 +44,101 @@ html {
 
 body {
   background-color: var(--color-ivory);
-  color: var(--color-cocoa);
+  color: var(--color-espresso);
   font-family: var(--font-body);
   font-size: 1rem;
   line-height: 1.65;
-  /* faint warm bloom, the way light falls across a marble counter */
-  background-image:
-    radial-gradient(
-      70rem 40rem at 82% -12%,
-      color-mix(in oklab, var(--color-gold) 14%, transparent),
-      transparent 68%
-    ),
-    radial-gradient(
-      50rem 36rem at -6% 108%,
-      color-mix(in oklab, var(--color-sand) 70%, transparent),
-      transparent 70%
-    );
-  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* --- typographic helpers ------------------------------------- */
+/* --- typography ---------------------------------------------- */
 .font-display {
   font-family: var(--font-display);
-  font-weight: 300;
-  line-height: 1.02;
-  letter-spacing: -0.01em;
-}
-
-/* The wordmark and small flourishes. Reserved — never for paragraphs. */
-.font-script {
-  font-family: var(--font-script);
   font-weight: 400;
-  line-height: 1.1;
+  line-height: 1.04;
+  letter-spacing: -0.015em;
 }
 
-.measure { max-width: 62ch; }
+/* Letterspaced caps: the wordmark and micro-labels only. */
+.wordmark {
+  font-family: var(--font-body);
+  font-weight: 500;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-sage-deep);
+}
+
+.measure { max-width: 60ch; }
 .measure-tight { max-width: 44ch; }
 
-.tag {
-  font-size: 0.75rem;
-  letter-spacing: 0.06em;
-  color: var(--color-taupe);
-}
-
-.rule {
-  border: 0;
-  border-top: 1px solid var(--rule);
-}
+.rule { border: 0; border-top: 1px solid var(--rule); }
 
 /* --- interactive base --------------------------------------- */
 a, button, [role="button"], summary, label[for] { cursor: pointer; }
 
 :where(a, button, input, select, textarea, [tabindex]):focus-visible {
-  outline: 2px solid var(--color-gold-ink);
+  outline: 2px solid var(--color-sage-deep);
   outline-offset: 3px;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 
-/* --- signature: sillage reveal on product cards -------------- */
-.sillage {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 420ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-.sillage > div { overflow: hidden; }
-.group:hover .sillage,
-.group:focus-within .sillage { grid-template-rows: 1fr; }
-
-/* --- page-load reveal, one orchestrated moment --------------- */
+/* --- motion --------------------------------------------------- */
 @keyframes rise {
-  from { opacity: 0; transform: translateY(14px); }
+  from { opacity: 0; transform: translateY(18px); }
   to { opacity: 1; transform: none; }
 }
-.rise { animation: rise 900ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.rise { animation: rise 800ms cubic-bezier(0.22, 1, 0.36, 1) both; }
 
-@keyframes draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-.draw-x { transform-origin: left; animation: draw 1200ms cubic-bezier(0.22, 1, 0.36, 1) both; }
-
-@keyframes swirl {
-  from { transform: rotate(-1.5deg) scale(0.96); opacity: 0; }
-  to { transform: none; opacity: 1; }
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
-.swirl { animation: swirl 1400ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.fade { animation: fade 700ms ease both; }
 
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .rise, .draw-x, .swirl, .sillage { animation: none; transition: none; }
-  .sillage { grid-template-rows: 1fr; }
+/* The bottle settles onto a counter. */
+@keyframes settle {
+  from { opacity: 0; transform: translateY(26px) rotate(-1.2deg) scale(0.96); }
+  to { opacity: 1; transform: none; }
 }
+.settle { animation: settle 1100ms cubic-bezier(0.22, 1, 0.36, 1) both; }
 
+/* Quiz cards cross-fade between questions. */
+@keyframes swap {
+  from { opacity: 0; transform: translateX(14px); }
+  to { opacity: 1; transform: none; }
+}
+.swap { animation: swap 420ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@keyframes drift {
 /* --- form fields --------------------------------------------- */
 .field {
   width: 100%;
-  background: var(--color-porcelain);
+  background: var(--color-cream);
   border: 1px solid var(--color-line);
-  border-radius: 2px;
-  padding: 0.7rem 0.85rem;
-  color: var(--color-cocoa);
+  border-radius: 0.75rem;
+  padding: 0.8rem 1rem;
+  color: var(--color-espresso);
   font-size: 1rem; /* keeps iOS from zooming on focus */
-  transition: border-color 180ms ease, box-shadow 180ms ease;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
 }
-.field::placeholder { color: color-mix(in oklab, var(--color-taupe) 70%, transparent); }
-.field:hover { border-color: color-mix(in oklab, var(--color-gold) 55%, transparent); }
+.field::placeholder { color: color-mix(in oklab, var(--color-taupe) 65%, transparent); }
+.field:hover { border-color: var(--color-sage); }
 .field:focus {
-  border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-gold) 22%, transparent);
+  outline: none;
+  border-color: var(--color-sage-mid);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-sage) 70%, transparent);
 }
-.field[aria-invalid="true"] { border-color: #b4573f; }
+.field[aria-invalid="true"] { border-color: #c2705f; }
+.field[aria-invalid="true"]:focus {
+  box-shadow: 0 0 0 4px color-mix(in oklab, #c2705f 18%, transparent);
+}
 
 /* --- buttons -------------------------------------------------- */
 .btn {
@@ -147,41 +146,78 @@ a, button, [role="button"], summary, label[for] { cursor: pointer; }
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  min-height: 44px; /* touch target */
-  padding: 0.7rem 1.5rem;
-  border-radius: 2px;
+  min-height: 46px; /* touch target */
+  padding: 0.75rem 1.75rem;
+  border-radius: 999px;
   font-size: 0.9rem;
-  letter-spacing: 0.02em;
+  font-weight: 500;
   border: 1px solid transparent;
-  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+  transition: background-color 220ms ease, color 220ms ease,
+    border-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
 }
-.btn-primary { background: var(--color-espresso); color: var(--color-ivory); }
-.btn-primary:hover:not(:disabled) { background: #2f2823; }
+.btn:active:not(:disabled) { transform: translateY(1px); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.btn-primary {
+  background: var(--color-espresso);
+  color: var(--color-ivory);
+  box-shadow: var(--shadow-soft);
+}
+.btn-primary:hover:not(:disabled) { background: #42382f; box-shadow: var(--shadow-lift); }
+
+.btn-sage { background: var(--color-sage); color: var(--color-espresso); }
+.btn-sage:hover:not(:disabled) { background: var(--color-sage-mid); }
+
 .btn-ghost {
   border-color: var(--color-line);
-  background: var(--color-porcelain);
-  color: var(--color-cocoa);
+  background: transparent;
+  color: var(--color-espresso);
 }
 .btn-ghost:hover:not(:disabled) {
-  border-color: var(--color-gold);
-  background: color-mix(in oklab, var(--color-gold) 8%, var(--color-porcelain));
-}
-.btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-/* --- light-on-dark sections (espresso panels) ---------------- */
-.on-dark { background: var(--color-espresso); color: var(--color-ivory); }
-.on-dark .tag { color: color-mix(in oklab, var(--color-ivory) 62%, transparent); }
-.on-dark .rule { border-top-color: rgba(255, 255, 255, 0.14); }
-.on-dark .btn-primary { background: var(--color-ivory); color: var(--color-espresso); }
-.on-dark .btn-primary:hover:not(:disabled) { background: #fff; }
-.on-dark .btn-ghost {
-  background: transparent;
-  color: var(--color-ivory);
-  border-color: rgba(255, 255, 255, 0.24);
-}
-.on-dark .btn-ghost:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--color-gold-soft);
+  border-color: var(--color-sage-mid);
+  background: var(--color-cream);
 }
 
+/* --- surfaces -------------------------------------------------- */
+.card {
+  background: var(--color-cream);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-soft);
+}
 
+.sage-panel { background: var(--color-sage); border-radius: var(--radius-card); }
+.peach-panel { background: var(--color-peach); border-radius: var(--radius-card); }
+
+/* --- note reveal on product cards ---------------------------- */
+.sillage {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sillage > div { overflow: hidden; }
+.group:hover .sillage,
+.group:focus-within .sillage { grid-template-rows: 1fr; }
+
+/* --- cart drawer --------------------------------------------- */
+@keyframes slide-in {
+  from { transform: translateX(100%); }
+  to { transform: none; }
+}
+.slide-in { animation: slide-in 380ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@keyframes backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.backdrop-in { animation: backdrop-in 300ms ease both; }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.drift { animation: drift 9s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .rise, .fade, .settle, .swap, .drift { animation: none; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; }
+}

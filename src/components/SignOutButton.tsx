@@ -18,7 +18,7 @@ export default function SignOutButton() {
         router.refresh();
         router.push("/");
       }}
-      className="tag underline-offset-4 hover:text-cocoa hover:underline"
+      className="text-[0.85rem] text-taupe underline-offset-4 transition-colors hover:text-espresso hover:underline"
     >
       {busy ? "Signing out…" : "Sign out"}
     </button>

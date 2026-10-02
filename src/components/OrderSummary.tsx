@@ -49,7 +49,7 @@ export default function OrderSummary({
                 <button
                   type="button"
                   onClick={() => onQty(line.product.slug, -1)}
-                  className="btn btn-ghost h-9 min-h-9 w-9 px-0 text-[0.9rem]"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border text-espresso/70 transition-colors hover:bg-sage"
                   aria-label={`Remove one ${line.product.name}`}
                 >
                   −

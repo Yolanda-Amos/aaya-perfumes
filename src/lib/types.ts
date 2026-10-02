@@ -69,12 +69,16 @@ export const OCCASION_LABEL: Record<Occasion, string> = {
   occasion: "Occasions",
 };
 
-export const CURRENCY = "AED";
+export const CURRENCY = "NGN";
 
+/** Prices are stored in kobo (minor units) so 1250000 renders as ₦12,500. */
 export function formatPrice(minor: number) {
-  return new Intl.NumberFormat("en-AE", {
+  return new Intl.NumberFormat("en-NG", {
     style: "currency",
     currency: CURRENCY,
-    minimumFractionDigits: 2,
-  }).format(minor / 100);
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  })
+    .format(minor / 100)
+    .replace("NGN", "₦");
 }

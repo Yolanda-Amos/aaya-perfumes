@@ -1,14 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { QUESTIONS } from "@/lib/quiz-questions";
-import { recommend, type Match } from "@/lib/quiz";
-import { CATALOGUE } from "@/lib/products";
+import Glyph from "./Glyph";
 import QuizResult from "./QuizResult";
+import { QUESTIONS } from "@/lib/quiz-questions";
+import { recommend, derivePersonality, type Match } from "@/lib/quiz";
+import { CATALOGUE } from "@/lib/products";
 
-/* The quiz. One question per screen so it never feels like a form.
-   State is a plain answers map; the scoring lives in lib/quiz so it can
-   be tested without a browser. */
+/* One question per screen so it never feels like a form. State is a
+   plain answers map; scoring lives in lib/quiz so it stays testable. */
 export default function ScentQuiz() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -16,18 +16,19 @@ export default function ScentQuiz() {
 
   const total = QUESTIONS.length;
   const question = QUESTIONS[step];
-  const picked = question ? answers[question.id] : undefined;
 
   const matches: Match[] = useMemo(
     () => (done ? recommend(answers, CATALOGUE) : []),
     [done, answers]
   );
+  const personality = useMemo(
+    () => (done ? derivePersonality(answers) : ""),
+    [done, answers]
+  );
 
   function choose(optionId: string) {
-    if (!question) return;
     const next = { ...answers, [question.id]: optionId };
     setAnswers(next);
-    // Advance by itself; Back stays available on every step.
     if (step + 1 < total) setStep(step + 1);
     else setDone(true);
   }
@@ -48,26 +49,38 @@ export default function ScentQuiz() {
   }
 
   if (done) {
-    return <QuizResult matches={matches} onRetake={restart} />;
+    return (
+      <QuizResult
+        personality={personality}
+        matches={matches}
+        onRetake={restart}
+        onBack={back}
+      />
+    );
   }
 
+  const pct = ((step + 1) / total) * 100;
+
   return (
-    <div className="rise">
+    <div className="mx-auto max-w-3xl">
       <div className="flex items-center justify-between gap-4">
-        <p className="tag">
+        <p className="eyebrow">
           Question {step + 1} of {total}
         </p>
         {step > 0 && (
-          <button type="button" onClick={back} className="tag hover:text-cocoa">
+          <button
+            type="button"
+            onClick={back}
+            className="text-[0.85rem] text-taupe underline-offset-4 transition-colors hover:text-espresso hover:underline"
+          >
             Back
           </button>
         )}
       </div>
 
-      {/* Progress as a thin gold rule — structure, not decoration. */}
       <div
-        className="mt-3 h-px w-full"
-        style={{ background: "var(--rule)" }}
+        className="mt-3 h-1 w-full overflow-hidden rounded-full"
+        style={{ background: "var(--color-sage)" }}
         role="progressbar"
         aria-valuenow={step + 1}
         aria-valuemin={1}
@@ -75,58 +88,46 @@ export default function ScentQuiz() {
         aria-label="Quiz progress"
       >
         <div
-          className="h-px bg-gold transition-all duration-300"
-          style={{ width: `${((step + 1) / total) * 100}%` }}
+          className="h-full rounded-full bg-sage-mid transition-all duration-500"
+          style={{ width: `${pct}%` }}
         />
       </div>
 
-      {question && (
-        <fieldset className="mt-8 border-0 p-0">
-          <legend className="font-display text-3xl sm:text-4xl">
-            {question.prompt}
-          </legend>
-          {question.hint && (
-            <p className="mt-2 measure text-[0.9rem] text-taupe">{question.hint}</p>
-          )}
+      <fieldset key={question.id} className="mt-9 border-0 p-0">
+        <legend className="font-display text-3xl leading-tight sm:text-[2.6rem]">
+          {question.prompt}
+        </legend>
+        {question.hint && (
+          <p className="mt-3 measure text-[0.95rem] text-taupe">
+            {question.hint}
+          </p>
+        )}
 
-          <div
-            className={`mt-8 grid gap-3 ${
-              question.options.length > 4
-                ? "sm:grid-cols-2 lg:grid-cols-3"
-                : "sm:grid-cols-2"
-            }`}
-          >
-            {question.options.map((option) => {
-              const active = picked === option.id;
-              return (
-                <button
-                  key={option.id}
-                  type="button"
-                  onClick={() => choose(option.id)}
-                  aria-pressed={active}
-                  className={`rounded-sm border p-4 text-left transition-colors duration-200 ${
-                    active
-                      ? "border-gold bg-gold/8"
-                      : "border-line bg-porcelain hover:border-gold"
-                  }`}
-                >
-                  <span className="block font-medium">{option.label}</span>
-                  {option.blurb && (
-                    <span className="mt-1 block text-[0.85rem] text-taupe">
-                      {option.blurb}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </fieldset>
-      )}
-
-      <p className="mt-8 text-[0.85rem] text-taupe">
-        {Object.keys(answers).length} of {total} answered. You can go back and change
-        any answer before you see your match.
-      </p>
+        <div className="mt-8 grid gap-3 sm:grid-cols-2">
+          {question.options.map((option) => (
+            <button
+              key={option.id}
+              type="button"
+              onClick={() => choose(option.id)}
+              className="group flex items-start gap-4 rounded-[--radius-card] border border-line bg-cream p-5 text-left transition-all duration-200 hover:border-sage-mid hover:shadow-[--shadow-soft]"
+            >
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-sage text-sage-deep transition-colors duration-200 group-hover:bg-sage-mid group-hover:text-ivory">
+                <Glyph name={option.glyph ?? "leaf"} />
+              </span>
+              <span className="min-w-0">
+                <span className="block font-medium leading-snug">
+                  {option.label}
+                </span>
+                {option.blurb && (
+                  <span className="mt-1 block text-[0.85rem] leading-relaxed text-taupe">
+                    {option.blurb}
+                  </span>
+                )}
+              </span>
+            </button>
+          ))}
+        </div>
+      </fieldset>
     </div>
   );
 }

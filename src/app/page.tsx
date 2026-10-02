@@ -1,70 +1,93 @@
 import Link from "next/link";
 import Bottle from "@/components/Bottle";
-import Icon from "@/components/Icon";
+import Glyph from "@/components/Glyph";
 import ShopGrid from "@/components/ShopGrid";
 import ScentQuiz from "@/components/ScentQuiz";
+import MoodSection from "@/components/MoodSection";
 import { CATALOGUE } from "@/lib/products";
 
-const PROMISES = [
-  { icon: "truck", title: "Free shipping", detail: "On every order" },
-  { icon: "vial", title: "Two samples", detail: "With every order" },
-  { icon: "refresh", title: "Easy returns", detail: "30 days, unopened" },
-  { icon: "lock", title: "Secure payment", detail: "Encrypted checkout" },
-];
+const HERO_BOTTLES = ["#d9b8b0", "#8fa58f", "#e9d3cd"];
 
-const SHORTCUTS = [
-  "All roll-ons",
-  "Oud & attars",
-  "New this month",
-  "Gift sets",
-  "For her",
-  "For him",
-];
-
-/* The hero. One large bottle on a warm dark field — the product *is* the
-   image, and the wordmark sits behind it rather than shouting over it. */
+/* The hero. The bottle sits deliberately off-centre with soft botanical
+   marks around it — an editorial layout, not a centred shop banner. */
 function Hero() {
-  const star = CATALOGUE.find((p) => p.slug === "oud-bushra")!;
-
   return (
-    <section className="on-dark relative overflow-hidden">
-      <div className="mx-auto grid max-w-7xl items-center gap-12 px-6 py-20 lg:grid-cols-[1.05fr_0.95fr] lg:py-24">
+    <section className="relative overflow-hidden">
+      {/* sage wash bleeding in from the right */}
+      <div
+        className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 lg:block"
+        style={{
+          background:
+            "linear-gradient(200deg, var(--color-sage) 0%, transparent 72%)",
+        }}
+        aria-hidden="true"
+      />
+
+      <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 pb-20 pt-14 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:pb-28 lg:pt-20">
         <div className="rise" style={{ animationDelay: "60ms" }}>
-          <p className="font-script text-2xl text-gold-soft">Aaya</p>
-          <h1 className="mt-4 font-display text-[clamp(2.75rem,6vw,5rem)] leading-[1.05]">
-            Scents that leave
+          <p className="eyebrow">Aaya Perfume</p>
+          <h1 className="mt-5 font-display text-[clamp(2.9rem,7vw,5.4rem)] leading-[1.02]">
+            A scent that
             <br />
-            a lasting
-            <br />
-            impression.
+            feels like you.
           </h1>
-          <p className="mt-6 measure text-[1.05rem] text-ivory/70">
-            Thirty-seven Arabic roll-ons, each 24ml and priced the same. Wear one
-            for a week, not a moment — the small bottles are the honest ones.
+          <p className="mt-6 measure text-[1.05rem] leading-relaxed text-taupe">
+            Discover fragrances made for every mood, moment, and version of you.
           </p>
-          <div className="mt-9 flex flex-wrap gap-4">
+          <div className="mt-9 flex flex-wrap items-center gap-3">
             <Link href="#fragrances" className="btn btn-primary">
-              Explore the collection
+              Shop Fragrances
             </Link>
             <Link href="#quiz" className="btn btn-ghost">
-              Find your scent
+              Find Your Scent
             </Link>
           </div>
+
+          <dl className="mt-12 flex flex-wrap gap-x-10 gap-y-4">
+            {[
+              ["37", "roll-on scents"],
+              ["24ml", "travel-friendly"],
+              ["₦12,500", "every bottle"],
+            ].map(([value, label]) => (
+              <div key={label}>
+                <dt className="font-display text-2xl text-sage-deep">{value}</dt>
+                <dd className="text-[0.8rem] text-taupe">{label}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
 
-        <div className="flex items-center justify-center">
-          <div
-            className="swirl flex items-end justify-center gap-4"
-            style={{ animationDelay: "240ms" }}
-          >
-            <div className="hidden opacity-40 sm:block" aria-hidden="true">
-              <Bottle hue="#8c6a4e" size="md" />
-            </div>
-            <Bottle hue={star.hue} size="lg" label={`${star.name}, a 24ml roll-on`} />
-            <div className="hidden opacity-60 sm:block" aria-hidden="true">
-              <Bottle hue="#d8b26a" size="md" />
-            </div>
+        {/* bottle composition */}
+        <div className="relative flex items-center justify-center">
+          <div className="settle flex items-end justify-center gap-4 sm:gap-6">
+            <span className="drift hidden sm:block" aria-hidden="true">
+              <Bottle hue={HERO_BOTTLES[0]} size="md" />
+            </span>
+            <Bottle hue={HERO_BOTTLES[1]} size="lg" label="An Aaya 24ml roll-on" />
+            <span className="drift hidden sm:block" style={{ animationDelay: "1.2s" }} aria-hidden="true">
+              <Bottle hue={HERO_BOTTLES[2]} size="md" />
+            </span>
           </div>
+
+          {/* botanical marks */}
+          <span
+            className="absolute left-4 top-6 text-sage-mid sm:left-10 sm:top-10"
+            aria-hidden="true"
+          >
+            <Glyph name="leaf" className="h-10 w-10" />
+          </span>
+          <span
+            className="absolute bottom-8 right-4 text-rose sm:bottom-12 sm:right-8"
+            aria-hidden="true"
+          >
+            <Glyph name="bloom" className="h-9 w-9" />
+          </span>
+          <span
+            className="absolute right-14 top-16 hidden text-peach sm:block"
+            aria-hidden="true"
+          >
+            <Glyph name="drop" className="h-7 w-7" />
+          </span>
         </div>
       </div>
     </section>
@@ -76,125 +99,116 @@ export default function HomePage() {
     <>
       <Hero />
 
-      {/* ---- shortcut rail: structure, so the shelf is browsable ---- */}
-      <nav
-        aria-label="Shop by category"
-        className="border-b bg-porcelain"
-        style={{ borderColor: "var(--rule)" }}
-      >
-        <ul className="mx-auto grid max-w-7xl grid-cols-3 sm:grid-cols-6">
-          {SHORTCUTS.map((label) => (
-            <li
-              key={label}
-              className="flex flex-col items-center gap-2 border-r px-2 py-6 text-center last:border-r-0"
-              style={{ borderColor: "var(--rule)" }}
-            >
-              <Icon name="bottle" className="h-5 w-5 text-gold-ink" />
-              <span className="text-[0.78rem] leading-tight">{label}</span>
-            </li>
-          ))}
-        </ul>
-      </nav>
-
-      {/* ---- the collection ---- */}
-      <section id="fragrances" className="mx-auto max-w-7xl scroll-mt-24 px-6 py-20">
+      <section id="fragrances" className="mx-auto max-w-7xl scroll-mt-24 px-5 py-20 sm:px-8 sm:py-24">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <p className="font-script text-xl text-gold-ink">The collection</p>
-            <h2 className="mt-2 font-display text-4xl sm:text-5xl">
-              Thirty-seven, all the same price
+            <p className="eyebrow">The collection</p>
+            <h2 className="mt-3 font-display text-4xl sm:text-5xl">
+              Find your signature scent.
             </h2>
+            <p className="mt-3 measure text-taupe">
+              Small bottles. Beautiful scents. Big personality.
+            </p>
           </div>
-          <p className="measure text-[0.9rem] text-taupe">
-            Hover or focus a bottle to read its notes.
+          <p className="measure-tight text-[0.88rem] text-taupe">
+            Hover a bottle to read its notes.
           </p>
         </div>
-
-        <div className="mt-10">
+        <div className="mt-12">
           <ShopGrid products={CATALOGUE} />
         </div>
       </section>
 
-      {/* ---- the quiz: the one interactive moment on the page ---- */}
-      <section id="quiz" className="on-dark scroll-mt-24">
-        <div className="mx-auto max-w-7xl px-6 py-20">
+      <section id="quiz" className="scroll-mt-24 bg-sage">
+        <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-24">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div>
-              <p className="font-script text-xl text-gold-soft">Find your signature</p>
-              <h2 className="mt-2 font-display text-4xl sm:text-5xl">
-                Five questions. Three bottles.
+              <p className="eyebrow">Find Your Scent</p>
+              <h2 className="mt-3 font-display text-4xl sm:text-5xl">
+                Five questions. One bottle.
               </h2>
             </div>
-            <p className="measure text-[0.9rem] text-ivory/70">
-              No sign-up, no email gate. We show you why each one matched.
+            <p className="measure-tight text-[0.9rem] text-taupe">
+              No sign-up, no email gate. We show you why each match fits.
             </p>
           </div>
-
           <div className="mt-12">
             <ScentQuiz />
           </div>
         </div>
       </section>
 
-      {/* ---- discovery set + gifting ---- */}
-      <section className="mx-auto max-w-7xl px-6 py-20">
-        <div className="grid gap-8 lg:grid-cols-2">
-          <div className="on-dark flex flex-col justify-center p-10">
-            <p className="font-script text-xl text-gold-soft">Discovery set</p>
-            <h3 className="mt-2 font-display text-3xl">
-              Ten 3ml vials, chosen for you
-            </h3>
-            <p className="mt-4 measure text-ivory/70">
-              Take the quiz, get a set built from your answers. Ten samples in a
-              lined case — enough to find the one, and cheaper than a single full
-              bottle.
-            </p>
-            <Link href="#quiz" className="btn btn-primary mt-8 self-start">
-              Build my set
-            </Link>
+      <section id="mood" className="mx-auto max-w-7xl scroll-mt-24 px-5 py-20 sm:px-8 sm:py-24">
+        <div>
+          <p className="eyebrow">Browse by mood</p>
+          <h2 className="mt-3 font-display text-4xl sm:text-5xl">
+            What&apos;s your mood today?
+          </h2>
+        </div>
+        <div className="mt-10">
+          <MoodSection products={CATALOGUE} />
+        </div>
+      </section>
+__TAIL2__
+      <section id="about" className="scroll-mt-24 bg-sage">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 py-20 sm:px-8 lg:grid-cols-2 lg:py-28">
+          <div
+            className="relative flex aspect-square items-center justify-center overflow-hidden rounded-[--radius-card]"
+            style={{
+              background:
+                "linear-gradient(150deg, var(--color-peach), var(--color-rose-soft) 55%, var(--color-sage))",
+            }}
+          >
+            <div className="flex items-end gap-5">
+              <Bottle hue="#d9b8b0" size="md" />
+              <Bottle hue="#8fa58f" size="lg" label="Two Aaya roll-ons side by side" />
+              <Bottle hue="#e9d3cd" size="md" />
+            </div>
+            <span className="absolute right-8 top-8 text-espresso/25" aria-hidden="true">
+              <Glyph name="bloom" className="h-14 w-14" />
+            </span>
+            <span className="absolute bottom-8 left-8 text-espresso/20" aria-hidden="true">
+              <Glyph name="leaf" className="h-12 w-12" />
+            </span>
           </div>
 
-          <div
-            className="flex flex-col justify-center border p-10"
-            style={{ borderColor: "var(--rule)", background: "var(--color-sand)" }}
-          >
-            <p className="font-script text-xl text-gold-ink">Gifting</p>
-            <h3 className="mt-2 font-display text-3xl">
-              Wrapped, with a note in your words
-            </h3>
-            <p className="mt-4 measure text-cocoa">
-              Recycled paper, a wax seal, and a handwritten card. Add your message
-              at checkout and we write it out exactly as you typed it.
+          <div>
+            <p className="eyebrow">About Aaya</p>
+            <h2 className="mt-3 font-display text-4xl leading-tight sm:text-5xl">
+              Fragrance is more than a scent. It&apos;s a feeling.
+            </h2>
+            <p className="mt-6 measure text-[1.02rem] leading-relaxed text-cocoa">
+              Aaya is a modern fragrance destination built around one idea: the
+              right scent should match your personality, your mood and the moment
+              you are actually in.
             </p>
-            <Link href="#fragrances" className="btn btn-ghost mt-8 self-start">
-              Browse to gift
-            </Link>
+            <p className="mt-4 measure text-[1.02rem] leading-relaxed text-cocoa">
+              Every bottle is a 24ml roll-on you can carry, try and finish. We
+              would rather you wore three and loved one than bought one and never
+              opened it.
+            </p>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <Link href="#quiz" className="btn btn-primary">Find Your Scent</Link>
+              <Link href="#fragrances" className="btn btn-ghost bg-cream">Browse all</Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ---- promises ---- */}
-      <section className="border-t" style={{ borderColor: "var(--rule)" }}>
-        <dl className="mx-auto grid max-w-7xl sm:grid-cols-2 lg:grid-cols-4">
-          {PROMISES.map((promise, i) => (
-            <div
-              key={promise.title}
-              className={`flex items-center gap-4 px-6 py-8 ${
-                i > 0 ? "border-t sm:border-t-0 sm:border-l" : ""
-              }`}
-              style={{ borderColor: "var(--rule)" }}
-            >
-              <Icon
-                name={promise.icon}
-                className="h-6 w-6 shrink-0 text-gold-ink"
-              />
-              <div>
-                <dt className="text-[0.95rem] font-medium">{promise.title}</dt>
-                <dd className="text-[0.85rem] text-taupe">{promise.detail}</dd>
-              </div>
-            </div>
+      <section className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
+        <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { title: "Free delivery", detail: "On orders over ₦40,000" },
+            { title: "Two samples", detail: "With every order" },
+            { title: "Easy returns", detail: "30 days, unopened" },
+            { title: "Secure payment", detail: "Encrypted checkout" },
+          ].map((item) => (
+            <li key={item.title} className="rounded-[--radius-card] bg-sage p-6">
+              <p className="font-display text-xl">{item.title}</p>
+              <p className="mt-1 text-[0.85rem] text-taupe">{item.detail}</p>
+            </li>
           ))}
-        </dl>
+        </ul>
       </section>
     </>
   );

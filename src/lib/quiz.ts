@@ -16,6 +16,42 @@ const OCCASION_WEIGHT = 8;
 const AUDIENCE_WEIGHT = 4;
 
 /**
+ * Works out the shopper's fragrance personality by tallying the
+ * `personality` each chosen option carries. The most common wins; ties
+ * break toward the answer they gave last, since that is the one they
+ * chose most deliberately.
+ */
+export function derivePersonality(
+  answers: Record<string, string>
+): string {
+  const votes = new Map<string, number>();
+  let last = "";
+
+  for (const q of QUESTIONS) {
+    const option = q.options.find((o) => o.id === answers[q.id]);
+    if (option?.personality) {
+      votes.set(option.personality, (votes.get(option.personality) ?? 0) + 1);
+      last = option.personality;
+    }
+  }
+
+  if (!votes.size) return "";
+
+  let best = "";
+  let bestCount = -1;
+  for (const [name, count] of votes) {
+    if (count > bestCount) {
+      best = name;
+      bestCount = count;
+    }
+  }
+
+  // Tied on the most votes — honour the final answer given.
+  const tied = [...votes.entries()].filter(([, c]) => c === bestCount);
+  return tied.length > 1 && last ? last : best;
+}
+
+/**
  * Scores the catalogue against a set of answers.
  *
  * Deliberately simple and explainable — every match traces back to one of

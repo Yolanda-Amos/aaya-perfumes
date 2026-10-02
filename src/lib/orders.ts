@@ -23,9 +23,9 @@ export type Order = {
   created_at: string;
 };
 
-/** Free delivery over Dhs 75; otherwise a flat Dhs 10. */
-export const FREE_SHIPPING_THRESHOLD_MINOR = 7500;
-export const FLAT_SHIPPING_MINOR = 1000;
+/** Free delivery over ₦40,000; otherwise a flat ₦2,000. */
+export const FREE_SHIPPING_THRESHOLD_MINOR = 4000000;
+export const FLAT_SHIPPING_MINOR = 200000;
 
 /** Human-friendly order reference, e.g. AAYA-7QK4M2 */
 export function makeReference() {
@@ -43,10 +43,14 @@ export function shippingFor(subtotalMinor: number) {
     : FLAT_SHIPPING_MINOR;
 }
 
+/** Naira for display: ₦12,500 — never AED or USD on the storefront. */
 export function money(minor: number) {
-  return new Intl.NumberFormat("en-AE", {
+  return new Intl.NumberFormat("en-NG", {
     style: "currency",
-    currency: "AED",
-    minimumFractionDigits: 2,
-  }).format(minor / 100);
+    currency: "NGN",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  })
+    .format(minor / 100)
+    .replace("NGN", "₦");
 }

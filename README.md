@@ -1,12 +1,36 @@
-# Aaya Perfumes
+# Aaya Perfume
 
-An Arabic roll-on perfume shop built with Next.js 15, Supabase (database +
-Google sign-in) and Mailgun (order emails).
+A modern fragrance boutique for Arabic roll-ons, built with Next.js 15,
+Supabase (database + Google sign-in) and Resend/Mailgun/SMTP (order emails).
 
-- **Storefront** — 37 roll-ons, filterable by family and audience, with note
-  pyramids that unfurl on hover or focus
-- **Scent quiz** — five questions score all 37 against the shopper's answers and
-  return three matches, each with a plain-language reason
+## Design system
+
+| token | value | used for |
+|---|---|---|
+| `--color-ivory` | `#faf7f2` | page background |
+| `--color-sage` | `#eef3ed` | quiet panels, quiz band |
+| `--color-sage-mid` | `#8fa58f` | accent, chips, quiz fills |
+| `--color-rose` | `#d9b8b0` | wishlist, mood card |
+| `--color-peach` | `#f3ddd0` | mood card, about image |
+| `--color-espresso` | `#302824` | headings, primary button |
+| `--color-taupe` | `#80756d` | secondary text |
+
+Display type is **DM Serif Display**; UI and body are **Manrope**. The
+wordmark is Manrope at 0.34em tracking, not a script face.
+
+**Prices are Naira.** `price_minor` is stored in kobo, so `1250000` renders
+as ₦12,500 via `formatPrice()` in `lib/types.ts`. Checkout and the order
+email use `money()` in `lib/orders.ts`. Never format prices inline.
+
+- **Storefront** — 37 roll-ons, filterable by family and audience, two-up on
+  mobile, with note pyramids that unfurl on hover or focus
+- **Product pages** — `/fragrance/[slug]` with imagery, notes, quantity, Buy Now
+- **Cart** — slide-out drawer backed by localStorage; hands the same
+  `slug:qty` string to the existing checkout
+- **Mood browsing** — Fresh / Sweet / Floral / Bold, filtered from real family data
+- **Scent quiz** — five questions (mood, setting, family, impression,
+  personality) score all 37 and return three matches, each with a reason,
+  plus a derived fragrance personality
 - **Checkout** — live bag with quantity controls, server-validated form
 - **Accounts** — Google sign-in, order history at `/account`
 - **Order lookup** — `/orders/AAYA-XXXXXX`, the link in every confirmation email
