@@ -31,6 +31,13 @@ export const isMailgunConfigured = Boolean(
   process.env.MAILGUN_DOMAIN && process.env.MAILGUN_API_KEY
 );
 
+/** Any supported email provider. See lib/send.ts for the order of preference. */
+export const isEmailConfigured = Boolean(
+  process.env.RESEND_API_KEY ||
+    (process.env.MAILGUN_DOMAIN && process.env.MAILGUN_API_KEY) ||
+    process.env.SMTP_HOST
+);
+
 /** Public site origin, used for OAuth redirects and email links. */
 export const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";

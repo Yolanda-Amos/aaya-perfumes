@@ -8,9 +8,9 @@ import {
   type Order,
   type OrderItem,
 } from "@/lib/orders";
-import { sendOrderConfirmation } from "@/lib/mailgun";
+import { sendOrderConfirmation } from "@/lib/send";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
-import { isSupabaseConfigured, isMailgunConfigured } from "@/lib/env";
+import { isSupabaseConfigured, isEmailConfigured } from "@/lib/env";
 
 export type CheckoutState = {
   ok: boolean;
@@ -168,11 +168,11 @@ export async function sendTestEmail(
   _prev: TestEmailState,
   formData: FormData
 ): Promise<TestEmailState> {
-  if (!isMailgunConfigured) {
+  if (!isEmailConfigured) {
     return {
       ok: false,
       message:
-        "Mailgun is not set up yet. Add MAILGUN_DOMAIN and MAILGUN_API_KEY to .env.local, then restart the server.",
+        "No email provider is set up yet. Add one to .env.local — Resend is the quickest — then restart the server. README section 5 walks through it.",
     };
   }
 
@@ -224,7 +224,7 @@ export async function sendTestEmail(
       message:
         result.reason === "provider"
           ? "Mailgun rejected the message. Check that MAILGUN_DOMAIN and MAILGUN_FROM are on the same domain, and that the API key is active."
-          : "Mailgun is not configured yet.",
+          : "No email provider is configured yet.",
     };
   }
 

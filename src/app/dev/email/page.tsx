@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import TestEmailForm from "./TestEmailForm";
-import { isMailgunConfigured } from "@/lib/env";
+import { isEmailConfigured } from "@/lib/env";
 
 export const metadata: Metadata = { title: "Email test — Aaya Perfumes" };
 export const dynamic = "force-dynamic";
@@ -18,18 +18,18 @@ export default function EmailTestPage() {
       </p>
 
       <div className="mt-10">
-        {isMailgunConfigured ? (
+        {isEmailConfigured ? (
           <TestEmailForm />
         ) : (
           <div
             className="border p-5"
             style={{ borderColor: "var(--rule)", background: "var(--color-sand)" }}
           >
-            <p className="font-medium">Mailgun is not set up yet</p>
+            <p className="font-medium">No email provider is set up yet</p>
             <p className="mt-2 text-[0.9rem] text-cocoa">
-              Add <code>MAILGUN_DOMAIN</code> and <code>MAILGUN_API_KEY</code> to{" "}
-              <code>.env.local</code>, then restart the server. README section 5
-              walks through it.
+              Add an email provider to <code>.env.local</code> — Resend is the
+              quickest option, and the free tier covers a small shop. Then restart
+              the server. README section 5 walks through it.
             </p>
           </div>
         )}

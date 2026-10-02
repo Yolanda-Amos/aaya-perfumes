@@ -11,7 +11,7 @@ Google sign-in) and Mailgun (order emails).
 - **Accounts** — Google sign-in, order history at `/account`
 - **Order lookup** — `/orders/AAYA-XXXXXX`, the link in every confirmation email
 - **Persistence** — every order is written to Postgres via Supabase
-- **Email** — Mailgun sends a styled HTML receipt after each order
+- **Email** — a styled HTML receipt after each order, via Resend, Mailgun or plain SMTP
 
 The site **runs with no credentials at all**: the catalogue falls back to
 `src/lib/data/*.ts` and checkout works as a guest. Add credentials one at a
@@ -138,35 +138,66 @@ You copy two values from Google Cloud Console into Supabase.
 
 ---
 
-## 5. Order emails with Mailgun
+## 5. Order emails
 
-Mailgun only sends from a domain you can prove you own. To try it without a
-domain, use their sandbox domain.
+The email content lives in [`src/lib/mail-template.ts`](./src/lib/mail-template.ts)
+and knows nothing about any provider. [`src/lib/send.ts`](./src/lib/send.ts)
+picks whichever provider you have configured, in this order: **Resend →
+Mailgun → SMTP**. Switching is a change of environment variables, not code.
 
-**Fastest path — sandbox (no domain needed)**
+Preview the email without placing a real order at **/dev/email**.
 
-1. Sign up at <https://www.mailgun.com> and verify your email.
-2. Go to **Sending → Domain settings** and copy the **sandbox domain**,
-   something like `sandbox123.mailgun.org`.
-3. **Sending → API keys → Create API key**. Copy the key (`key-…`), shown once.
+### Option A — Resend (recommended, easiest)
+
+1. Sign up at <https://resend.com> and verify your email.
+2. **API Keys → Create API key**. Copy it.
+3. **Domains → Add Domain**, then add the DNS records Resend gives you. Once it
+   verifies, you can send from any address on that domain.
 4. In `.env.local`:
    ```bash
-   MAILGUN_DOMAIN=sandbox123.mailgun.org
-   MAILGUN_API_KEY=key-xxxxxxxx
-   MAILGUN_FROM=Aaya Perfumes <your-verified-mailgun-address>
+   RESEND_API_KEY=re_xxxxxxxx
+   RESEND_FROM=Aaya Perfumes <orders@yourdomain.com>
    ```
-5. Sandbox mail only delivers to the address on your Mailgun account.
 
-**Real domain**
+The free tier is 3,000 emails a month and does not require business
+verification, which makes it the quickest route for a small shop. To start
+without a domain, Resend lets you send from `onboarding@resend.dev` to your own
+address only.
 
-Add your domain under **Sending → Domains → Add domain**, then add the DNS
-records Mailgun gives you (TXT, MX, and two CNAMEs) at your domain registrar
-and wait for the green tick. Then set `MAILGUN_DOMAIN` to your domain
-(`mg.yourdomain.com`) and put `MAILGUN_FROM` on that same domain.
+### Option B — plain SMTP (works with anything)
 
-The email lives in [`src/lib/mailgun.ts`](./src/lib/mailgun.ts) and posts to
-`https://api.mailgun.net/v3/<domain>/messages` with HTTP Basic auth. If Mailgun
-is missing or errors, the order is still saved and the reason is logged — a
+Use this if you have a mailbox already. Find your provider's SMTP settings
+(Gmail: `smtp.gmail.com` port 587; Outlook: `smtp.office365.com`), then:
+
+```bash
+SMTP_HOST=smtp.yourprovider.com
+SMTP_PORT=587
+SMTP_USER=orders@yourdomain.com
+SMTP_PASS=your-app-password
+SMTP_FROM=Aaya Perfumes <orders@yourdomain.com>
+```
+
+Most providers want an **app password** rather than your real login password.
+
+### Option C — Mailgun
+
+Mailgun requires completed business verification before it will send, including
+a published privacy policy linked from every email. That is fine for an
+established business but is the slowest option for getting started.
+
+1. <https://www.mailgun.com> → verify your account and complete business
+   verification.
+2. **Sending → Domains → Add domain**, then add the DNS records (TXT, MX, and
+   two CNAMEs) at your registrar and wait for the green tick.
+3. **Sending → API keys → Create API key**, select **Sending** only.
+4. In `.env.local`:
+   ```bash
+   MAILGUN_DOMAIN=mg.yourdomain.com
+   MAILGUN_API_KEY=key-xxxxxxxx
+   MAILGUN_FROM=Aaya Perfumes <orders@mg.yourdomain.com>
+   ```
+
+If any provider errors, the order is still saved and the reason is logged — a
 mail outage never blocks a purchase.
 
 ---
@@ -177,7 +208,7 @@ mail outage never blocks a purchase.
 2. On <https://vercel.com>, **Add New → Project** and import it. Vercel detects
    Next.js on its own.
 3. Paste your `.env.local` values into **Project Settings → Environment
-   Variables** (mark `MAILGUN_API_KEY` and `SUPABASE_SERVICE_ROLE_KEY` as
+   Variables** (mark `RESEND_API_KEY`, `MAILGUN_API_KEY` and `SUPABASE_SERVICE_ROLE_KEY` as
    production-only).
 4. Set `NEXT_PUBLIC_SITE_URL` to your live domain.
 5. In Supabase and Google Cloud Console, add the live domain to the redirect URL
@@ -208,7 +239,8 @@ src/
     quiz-questions.ts         the five questions
     quiz.ts                   scoring + the Match type
     orders.ts                    types, totals, free-shipping rule
-    mailgun.ts                   confirmation email
+    mail-template.ts             email content (provider-independent)
+    send.ts                      provider switch: Resend / Mailgun / SMTP
     env.ts                       safe env access + "is it configured?" checks
     supabase/{client,server}.ts  Supabase clients
   middleware.ts                  keeps the sign-in session fresh

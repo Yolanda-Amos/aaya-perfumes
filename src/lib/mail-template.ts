@@ -1,7 +1,5 @@
-import "server-only";
-import { env, isMailgunConfigured, siteUrl } from "@/lib/env";
-import type { Order, OrderItem } from "@/lib/orders";
-import { money } from "@/lib/orders";
+import { money, type Order, type OrderItem } from "@/lib/orders";
+import { siteUrl } from "@/lib/env";
 
 const IVORY = "#fbf7f1";
 const ESPRESSO = "#1e1a17";
@@ -39,14 +37,8 @@ function row(label: string, value: string, strong = false) {
   </tr>`;
 }
 
-/** Sends the order confirmation. Fails softly so a mail outage never
- *  blocks a paid order — the order is already saved either way. */
-export async function sendOrderConfirmation(order: Order) {
-  if (!isMailgunConfigured) {
-    console.info("[mail] Mailgun not configured — skipping confirmation for", order.reference);
-    return { sent: false, reason: "not-configured" as const };
-  }
-
+/** The confirmation email content. Provider-independent — see send.ts. */
+export function orderConfirmationEmail(order: Order) {
   const lines = order.items
     .map((i: OrderItem) =>
       row(`${i.name} · ${i.size_ml}ml roll-on`, `${money(i.unit_minor * i.qty)}`)
@@ -76,33 +68,26 @@ export async function sendOrderConfirmation(order: Order) {
     </p>`
   );
 
+  const text = `Thank you, ${order.customer_name}. Order ${
+    order.reference
+  } is confirmed.
 
-  const auth = Buffer.from(
-    `api:${env("MAILGUN_API_KEY")}`
-  ).toString("base64");
+${order.items
+  .map((i) => `${i.name} (${i.size_ml}ml) x${i.qty} — ${money(i.unit_minor * i.qty)}`)
+  .join("\n")}
 
-  const res = await fetch(
-    `https://api.mailgun.net/v3/${env("MAILGUN_DOMAIN")}/messages`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Basic ${auth}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: env("MAILGUN_FROM", "Aaya Perfumes <orders@mail.example.com>"),
-        to: order.customer_email,
-        subject: `Order ${order.reference} confirmed — Aaya Perfumes`,
-        html,
-        text: `Thank you, ${order.customer_name}. Order ${order.reference} is confirmed. Total: ${money(order.total_minor)}. Two samples are included. Track it at ${siteUrl}/orders/${order.reference}`,
-      }),
-    }
-  );
+Subtotal: ${money(order.subtotal_minor)}
+Delivery: ${order.shipping_minor === 0 ? "Free" : money(order.shipping_minor)}
+Total: ${money(order.total_minor)}
 
-  if (!res.ok) {
-    const detail = await res.text();
-    console.error("[mail] Mailgun rejected the message:", res.status, detail);
-    return { sent: false, reason: "provider" as const };
-  }
-  return { sent: true as const };
+Two samples are included. Track your order at ${siteUrl}/orders/${order.reference}
+
+Aaya Perfumes · Dubai, UAE`;
+
+  return {
+    to: order.customer_email,
+    subject: `Order ${order.reference} confirmed — Aaya Perfumes`,
+    html,
+    text,
+  };
 }
