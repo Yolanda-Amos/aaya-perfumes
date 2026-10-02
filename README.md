@@ -174,8 +174,20 @@ You copy two values from Google Cloud Console into Supabase.
 
 9. Turn Google **on**.
 10. Paste the Client ID and Client secret.
-11. Set the **Site URL** to `http://localhost:3000` (later, your real domain).
-12. Under **Redirect URLs**, add:
+11. Set the **Site URL** to `http://localhost:3000` while developing, then
+    change it to your live domain before going public — **Supabase sends
+    people here after sign-in, so leaving it on localhost means customers
+    are redirected to your own computer.** If sign-in lands you on
+    `localhost:3000`, this is the setting to fix.
+12. Under **Redirect URLs**, add both your local and live callbacks:
+
+    ```
+    http://localhost:3000/auth/callback
+    https://YOUR-LIVE-DOMAIN/auth/callback
+    https://YOUR-LIVE-DOMAIN/**
+    ```
+
+    The wildcard covers preview deployments, which each get their own URL.
 
 ---
 
