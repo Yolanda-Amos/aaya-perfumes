@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { DM_Serif_Display, Manrope } from "next/font/google";
 import "./globals.css";
 import SignOutButton from "@/components/SignOutButton";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { CartProvider } from "@/components/CartProvider";
+import WelcomeNotice from "@/components/WelcomeNotice";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/env";
 
@@ -58,6 +60,12 @@ export default async function RootLayout({
           <main id="main">{children}</main>
 
           <SiteFooter />
+
+          {/* Confirms a just-created Google account. useSearchParams needs a
+              Suspense boundary here or the build hangs — see AGENTS.md. */}
+          <Suspense fallback={null}>
+            <WelcomeNotice />
+          </Suspense>
         </CartProvider>
       </body>
     </html>
