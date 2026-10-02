@@ -5,12 +5,21 @@ import ShopGrid from "@/components/ShopGrid";
 import ScentQuiz from "@/components/ScentQuiz";
 import MoodSection from "@/components/MoodSection";
 import { CATALOGUE } from "@/lib/products";
+import ProductImage from "@/components/ProductImage";
 
 const HERO_BOTTLES = ["#d9b8b0", "#8fa58f", "#e9d3cd"];
+
+/* The hero bottle is a real product, so the first impression is the
+   product rather than an illustration. Falls back to the CSS bottle if
+   the photograph is not on disk yet. */
+const HERO_SLUG = "niko";
 
 /* The hero. The bottle sits deliberately off-centre with soft botanical
    marks around it — an editorial layout, not a centred shop banner. */
 function Hero() {
+  const heroProduct =
+    CATALOGUE.find((p) => p.slug === HERO_SLUG) ?? CATALOGUE[0];
+
   return (
     <section className="relative overflow-hidden">
       {/* sage wash bleeding in from the right */}
@@ -63,7 +72,7 @@ function Hero() {
             <span className="drift hidden sm:block" aria-hidden="true">
               <Bottle hue={HERO_BOTTLES[0]} size="md" />
             </span>
-            <Bottle hue={HERO_BOTTLES[1]} size="lg" label="An Aaya 24ml roll-on" />
+            <ProductImage product={heroProduct} size="lg" fit="contain" priority />
             <span className="drift hidden sm:block" style={{ animationDelay: "1.2s" }} aria-hidden="true">
               <Bottle hue={HERO_BOTTLES[2]} size="md" />
             </span>

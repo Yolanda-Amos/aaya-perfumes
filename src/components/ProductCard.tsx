@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import Bottle from "./Bottle";
+import ProductImage from "@/components/ProductImage";
 import { useCart } from "@/components/CartProvider";
 import { formatPrice, FAMILY_LABEL, type Product } from "@/lib/products";
 
@@ -34,11 +34,13 @@ export default function ProductCard({ product }: { product: Product }) {
       >
         <Link
           href={`/fragrance/${product.slug}`}
-          className="flex aspect-[4/5] items-center justify-center p-6"
+          className="relative block aspect-[4/5] overflow-hidden"
           aria-label={`View ${product.name}`}
         >
-          <div className="transition-transform duration-500 ease-out group-hover:scale-[1.07]">
-            <Bottle hue={product.hue} size="lg" label={`${product.name}, a 24ml roll-on`} />
+          {/* The photograph fills the panel and scales gently on hover. The
+              fallback bottle supplies its own padding. */}
+          <div className="absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-[1.06]">
+            <ProductImage product={product} size="lg" />
           </div>
         </Link>
 

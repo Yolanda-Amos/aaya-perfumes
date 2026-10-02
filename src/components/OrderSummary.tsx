@@ -1,5 +1,6 @@
 "use client";
 
+import { ProductImageThumb } from "@/components/ProductImage";
 import { formatPrice, type Product } from "@/lib/products";
 import { money } from "@/lib/orders";
 
@@ -29,14 +30,7 @@ export default function OrderSummary({
       <ul className="divide-y" style={{ borderColor: "var(--rule)" }}>
         {lines.map((line) => (
           <li key={line.product.slug} className="flex gap-4 py-5">
-            <div
-              className="h-16 w-12 shrink-0 rounded-b-sm border"
-              style={{
-                background: `linear-gradient(180deg, color-mix(in oklab, ${line.product.hue} 60%, transparent), ${line.product.hue})`,
-                borderColor: "var(--rule)",
-              }}
-              aria-hidden="true"
-            />
+            <ProductImageThumb product={line.product} />
             <div className="flex-1">
               <p className="font-display text-lg leading-tight">
                 {line.product.name}

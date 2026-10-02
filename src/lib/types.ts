@@ -31,6 +31,13 @@ export type Product = {
   stock: number;
   /** Glass tint for the bottle illustration. */
   hue: string;
+  /**
+   * Photograph of the real bottle, relative to `public/`.
+   * Merged in from `lib/product-images.ts` rather than the data files so the
+   * photography set stays in one editable place. When this is absent — or the
+   * file has not been added yet — `ProductImage` falls back to the CSS bottle.
+   */
+  image?: string;
   /** Drives the men / women / unisex filter. */
   audience: Audience;
   /** 1 = close to skin, 3 = fills a room. Feeds the quiz. */

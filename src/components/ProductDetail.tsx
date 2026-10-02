@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Bottle from "./Bottle";
+import ProductImage from "@/components/ProductImage";
 import { useCart } from "@/components/CartProvider";
 import {
   formatPrice,
@@ -42,7 +42,7 @@ export default function ProductDetail({ product }: { product: Product }) {
     <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
       <div className="lg:sticky lg:top-28 lg:self-start">
         <div
-          className="relative flex aspect-[4/5] items-center justify-center overflow-hidden rounded-[--radius-card] border p-10"
+          className="relative aspect-[4/5] overflow-hidden rounded-[--radius-card] border"
           style={{
             borderColor: "var(--rule)",
             background: `linear-gradient(168deg,
@@ -50,8 +50,8 @@ export default function ProductDetail({ product }: { product: Product }) {
               var(--color-cream) 68%)`,
           }}
         >
-          <div className="drift">
-            <Bottle hue={product.hue} size="xl" label={`${product.name}, a 24ml roll-on`} />
+          <div className="drift absolute inset-0">
+            <ProductImage product={product} size="xl" priority />
           </div>
           {onSale && !out && (
             <p className="absolute left-5 top-5 rounded-full bg-sage px-3 py-1.5 text-[0.72rem] font-medium tracking-wide text-espresso">

@@ -126,7 +126,13 @@ configured.
 - **Payments are not live.** The card form validates the shape of the number
   and stores nothing; it never charges anyone. Wire Stripe, Paystack or
   Telr before taking real orders.
-- **No product photography.** The bottles are CSS illustrations tinted per
-  product from `hue`. Real photography would replace `components/Bottle.tsx`.
+- **Photography is optional per product.** `Product.image` is merged in
+  from `lib/product-images.ts` (slug to filename) inside `lib/products.ts`.
+  Files live in `public/products/`. `components/ProductImage.tsx` renders
+  the photo and falls back to the `Bottle` CSS illustration when a product
+  has no entry *or* the file 404s, so a missing or mistyped filename degrades
+  to the illustration instead of a broken image. Adding a photo = drop the
+  file in plus one line in the map. With `fit="cover"` the photo fills its
+  parent, so the parent must set the frame and `overflow-hidden`.
 - **Note pyramids are editorial.** `notes` on each product was written here,
   not supplied by the fragrance vendor.

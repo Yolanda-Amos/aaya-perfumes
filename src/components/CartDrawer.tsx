@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useCart, toCartValue, type CartLine } from "@/components/CartProvider";
-import { ProductThumb } from "@/components/Bottle";
+import { ProductImageThumb } from "@/components/ProductImage";
 import { money } from "@/lib/orders";
 
 function Row({ line, onQty, onRemove, onNavigate }: {
@@ -16,7 +16,7 @@ function Row({ line, onQty, onRemove, onNavigate }: {
   return (
     <li className="flex gap-4 py-5">
       <Link href={`/fragrance/${line.product.slug}`} onClick={onNavigate} className="shrink-0">
-        <ProductThumb product={line.product} />
+        <ProductImageThumb product={line.product} />
       </Link>
       <div className="min-w-0 flex-1">
         <p className="font-display text-lg leading-tight">{line.product.name}</p>

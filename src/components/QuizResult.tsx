@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Bottle from "./Bottle";
+import ProductImage from "@/components/ProductImage";
 import { useCart } from "@/components/CartProvider";
 import type { Match } from "@/lib/quiz";
 import { formatPrice, FAMILY_LABEL } from "@/lib/products";
@@ -13,7 +13,7 @@ function Hero({ match }: { match: Match }) {
     <div className="mt-10 grid gap-6 lg:grid-cols-[0.85fr_1fr]">
       <Link
         href={`/fragrance/${p.slug}`}
-        className="group relative flex aspect-[4/5] items-center justify-center overflow-hidden rounded-[--radius-card] border transition-shadow duration-300 hover:shadow-[--shadow-lift]"
+        className="group relative block aspect-[4/5] overflow-hidden rounded-[--radius-card] border transition-shadow duration-300 hover:shadow-[--shadow-lift]"
         style={{
           borderColor: "var(--rule)",
           background: `linear-gradient(168deg,
@@ -22,8 +22,8 @@ function Hero({ match }: { match: Match }) {
         }}
         aria-label={`View ${p.name}`}
       >
-        <div className="transition-transform duration-500 group-hover:scale-105">
-          <Bottle hue={p.hue} size="xl" />
+        <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-105">
+          <ProductImage product={p} size="xl" priority />
         </div>
       </Link>
 
@@ -126,7 +126,7 @@ export default function QuizResult({
                         className="flex h-16 w-14 shrink-0 items-center justify-center rounded-xl"
                         style={{ background: `color-mix(in oklab, ${m.product.hue} 20%, var(--color-cream))` }}
                       >
-                        <Bottle hue={m.product.hue} size="sm" />
+                        <ProductImage product={m.product} size="sm" />
                       </span>
                       <span className="min-w-0">
                         <span className="block font-display text-lg leading-tight">
