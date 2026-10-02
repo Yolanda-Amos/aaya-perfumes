@@ -1,0 +1,16 @@
+# Vercel uploads this directory directly, so guard the secrets a second
+# time beyond .gitignore. .env.local must never be uploaded.
+.env*
+!.env.example
+
+# Local artefacts
+.vercel
+node_modules
+.next
+out
+*.log
+*.tsbuildinfo
+
+# Tooling
+.DS_Store
+Thumbs.db
