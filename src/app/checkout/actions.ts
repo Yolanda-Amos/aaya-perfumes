@@ -10,7 +10,7 @@ import {
 } from "@/lib/orders";
 import { sendOrderConfirmation } from "@/lib/mailgun";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
-import { isSupabaseConfigured } from "@/lib/env";
+import { isSupabaseConfigured, isMailgunConfigured } from "@/lib/env";
 
 export type CheckoutState = {
   ok: boolean;
@@ -150,4 +150,86 @@ export async function placeOrder(
   await sendOrderConfirmation(order);
   revalidatePath("/account");
   return { ok: true, reference: order.reference };
+}
+
+export type TestEmailState = {
+  ok: boolean;
+  message: string;
+};
+
+/**
+ * Sends a sample confirmation to an address without saving an order.
+ *
+ * Useful for checking the email design and confirming the Mailgun keys
+ * work before anyone has to complete checkout. Builds an order object in
+ * memory only — nothing is written to the database.
+ */
+export async function sendTestEmail(
+  _prev: TestEmailState,
+  formData: FormData
+): Promise<TestEmailState> {
+  if (!isMailgunConfigured) {
+    return {
+      ok: false,
+      message:
+        "Mailgun is not set up yet. Add MAILGUN_DOMAIN and MAILGUN_API_KEY to .env.local, then restart the server.",
+    };
+  }
+
+  const email = String(formData.get("email") ?? "").trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+    return { ok: false, message: "Enter an email address we can send to." };
+  }
+
+  const first = CATALOGUE[0];
+  const second = CATALOGUE[1];
+  const items: OrderItem[] = [
+    {
+      product_id: first.id,
+      name: first.name,
+      slug: first.slug,
+      size_ml: first.size_ml,
+      unit_minor: first.price_minor,
+      qty: 2,
+    },
+    {
+      product_id: second.id,
+      name: second.name,
+      slug: second.slug,
+      size_ml: second.size_ml,
+      unit_minor: second.price_minor,
+      qty: 1,
+    },
+  ];
+  const subtotal = items.reduce((s, i) => s + i.unit_minor * i.qty, 0);
+
+  const result = await sendOrderConfirmation({
+    id: "TEST",
+    reference: makeReference(),
+    user_id: null,
+    customer_name: "Test Customer",
+    customer_email: email,
+    shipping_address: "12 Al Wasl Road, Dubai",
+    items,
+    subtotal_minor: subtotal,
+    shipping_minor: shippingFor(subtotal),
+    total_minor: subtotal + shippingFor(subtotal),
+    status: "paid",
+    created_at: new Date().toISOString(),
+  });
+
+  if (!result.sent) {
+    return {
+      ok: false,
+      message:
+        result.reason === "provider"
+          ? "Mailgun rejected the message. Check that MAILGUN_DOMAIN and MAILGUN_FROM are on the same domain, and that the API key is active."
+          : "Mailgun is not configured yet.",
+    };
+  }
+
+  return {
+    ok: true,
+    message: `Sent to ${email}. This is a sample — no order was saved.`,
+  };
 }
