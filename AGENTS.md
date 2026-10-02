@@ -46,7 +46,10 @@ src/
     env.ts                  env access + "is it configured?" checks
     supabase/{client,server}.ts    session client, createAdminClient()
   middleware.ts             refreshes the Supabase session on navigation
-supabase/schema.sql         run once in the SQL editor
+supabase/
+  config.toml              Supabase project settings
+  migrations/*.sql         versioned schema, applied on push to main
+  schema.sql               pointer to the migration above
 ```
 
 ## Rules that are easy to break
@@ -77,7 +80,16 @@ re-prices. Do not "improve" the checkout to accept a different shape.
 **6. Prices are recalculated server-side from the catalogue.** Never trust a
 price from the browser payload. `parseCart()` looks slugs up by slug.
 
-**7. Sold-out products are filtered before quiz scoring.** `recommend()`
+**8. Schema changes go in a new file under `supabase/migrations/`, never in
+`schema.sql`.** Name it `<YYYYMMDDHHMMSS>_what_it_does.sql`. The Supabase
+GitHub integration applies only that directory when `main` changes, so a
+change committed anywhere else silently never reaches the live database.
+Make every statement re-runnable (`if not exists`, `drop ... if exists`) so
+the migration is safe against a database that was set up by hand. Edge
+Functions and storage buckets are the other things that directory deploys —
+see `supabase/config.toml`.
+
+**9. Sold-out products are filtered before quiz scoring.** `recommend()`
 drops `stock === 0` first so it can never recommend something unbuyable.
 
 ## Conventions

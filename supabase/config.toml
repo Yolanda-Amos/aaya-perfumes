@@ -1,0 +1,13 @@
+# Project URL
+project_id = "aaya-perfume"
+
+# Supabase reads this file to work out which migrations, Edge Functions
+# and storage buckets to deploy. Keep it committed alongside
+# supabase/migrations/ — the GitHub integration needs both to be present
+# for a production deploy to do anything.
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]

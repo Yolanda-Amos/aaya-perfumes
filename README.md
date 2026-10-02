@@ -101,11 +101,28 @@ from the same weights, so it is always traceable to an answer the shopper gave.
 **Supabase (recommended — it also gives you Google sign-in for free)**
 
 1. Create a free project at <https://supabase.com>.
-2. Open **SQL Editor** (left sidebar → SQL Editor → New query).
-3. Paste everything from [`supabase/schema.sql`](./supabase/schema.sql) and
-   press **Run**. It creates the `orders` and `products` tables plus the row
-   security policies.
-4. Go to **Project Settings → API** and copy:
+2. Create the tables. Pick **one** of the two routes below.
+
+   **Route A — GitHub integration (recommended).** The schema is a versioned
+   migration, so Supabase can apply it for you on every push:
+   - **Project Settings → Integrations → GitHub** → **Authorize GitHub**.
+   - Choose this repository. Set **Working directory** to `.` (the `supabase/`
+     folder is at the repo root) and **Production branch** to `main`.
+   - Turn on **Deploy to production**, then push to `main`.
+
+   Supabase reads the files in `supabase/migrations/` and applies any it has
+   not applied before. This is what keeps the live database in step with the
+   code.
+
+   **Route B — by hand.** Open **SQL Editor → New query**, paste
+   [`supabase/migrations/20260101000000_initial_schema.sql`](./supabase/migrations/20260101000000_initial_schema.sql)
+   and press **Run**. It creates the `orders` and `products` tables, the row
+   security policies and the grants. Every statement is guarded, so it is
+   safe to run twice.
+
+   Either route creates the same schema. Route A is better because it also
+   *records* what has been applied, so a later migration only runs once.
+3. Go to **Project Settings → API** and copy:
    - **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
    - **anon / publishable key** → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - **service_role / secret key** → `SUPABASE_SERVICE_ROLE_KEY`
@@ -118,7 +135,7 @@ sign-in. Two options:
 - Use Neon for the database **and** Supabase for auth (they connect fine), or
 - Stick with Supabase entirely.
 
-The schema file is standard Postgres, so it runs on Neon unchanged. The code
+The migration file is standard Postgres, so it runs on Neon unchanged. The code
 talks to Supabase, so a pure-Neon setup needs a small change to
 `src/lib/supabase/server.ts` — tell me if that's the route you want and I'll
 write it.
@@ -268,7 +285,10 @@ src/
     env.ts                       safe env access + "is it configured?" checks
     supabase/{client,server}.ts  Supabase clients
   middleware.ts                  keeps the sign-in session fresh
-supabase/schema.sql              run this in your database
+supabase/
+  config.toml                 Supabase project settings
+  migrations/*.sql            versioned schema, applied on push to main
+  schema.sql                  pointer to the migration above
 ```
 
 ### Security notes
