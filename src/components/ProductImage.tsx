@@ -86,7 +86,7 @@ export default function ProductImage({
             ? "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             : "(max-width: 640px) 40vw, 20vw"
         }
-        className={fit === "cover" ? "object-cover" : "object-contain"}
+        className={`mix-blend-multiply ${fit === "cover" ? "object-contain p-[10%] transition-transform duration-700 ease-out group-hover:scale-[1.05]" : "object-contain"}`}
         priority={priority}
         onError={() => setBroken(true)}
       />
@@ -126,7 +126,7 @@ export function ProductImageThumb({ product }: { product: Product }) {
         alt={product.name}
         fill
         sizes="80px"
-        className="object-contain p-1"
+        className="object-contain p-1 mix-blend-multiply"
         onError={() => setBroken(true)}
       />
     </div>

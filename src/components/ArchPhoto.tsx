@@ -32,7 +32,7 @@ export default function ArchPhoto({
       <div
         className="arch h-full w-full"
         style={{
-          background: `linear-gradient(170deg, color-mix(in oklab, ${product.hue} 35%, var(--color-ivory)), var(--color-ivory))`,
+          background: `radial-gradient(120% 80% at 50% 30%, var(--color-cream) 0%, color-mix(in oklab, ${product.hue} 22%, var(--color-ivory)) 100%)`,
         }}
       >
         {product.image && (
@@ -42,7 +42,7 @@ export default function ArchPhoto({
             fill
             sizes={sizes}
             priority={priority}
-            className="object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
+            className="object-contain p-[8%] pt-[18%] mix-blend-multiply transition-transform duration-[1400ms] ease-out group-hover:scale-[1.05]"
           />
         )}
       </div>
