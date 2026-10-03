@@ -123,7 +123,7 @@ export default function QuizResult({
                       style={{ borderColor: "var(--rule)" }}
                     >
                       <span
-                        className="flex h-16 w-14 shrink-0 items-center justify-center rounded-xl"
+                        className="relative h-16 w-14 shrink-0 overflow-hidden rounded-xl"
                         style={{ background: `color-mix(in oklab, ${m.product.hue} 20%, var(--color-cream))` }}
                       >
                         <ProductImage product={m.product} size="sm" />
