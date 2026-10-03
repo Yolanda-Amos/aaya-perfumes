@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-export default function SignOutButton() {
+export default function SignOutButton({ variant = "link" }: { variant?: "link" | "dark" }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
 
@@ -18,7 +18,11 @@ export default function SignOutButton() {
         router.refresh();
         router.push("/");
       }}
-      className="text-[0.85rem] text-taupe underline-offset-4 transition-colors hover:text-espresso hover:underline"
+      className={
+        variant === "dark"
+          ? "btn btn-ivory-ghost"
+          : "text-[0.85rem] text-taupe underline-offset-4 transition-colors hover:text-espresso hover:underline"
+      }
     >
       {busy ? "Signing out…" : "Sign out"}
     </button>

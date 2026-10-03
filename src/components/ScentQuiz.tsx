@@ -88,7 +88,7 @@ export default function ScentQuiz() {
         aria-label="Quiz progress"
       >
         <div
-          className="h-full rounded-full bg-sage-mid transition-all duration-500"
+          className="h-full rounded-full bg-brass transition-all duration-500"
           style={{ width: `${pct}%` }}
         />
       </div>

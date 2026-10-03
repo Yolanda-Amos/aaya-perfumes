@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { DM_Serif_Display, Manrope } from "next/font/google";
+import { Cormorant_Garamond, Manrope } from "next/font/google";
 import "./globals.css";
 import SignOutButton from "@/components/SignOutButton";
 import SiteHeader from "@/components/SiteHeader";
@@ -10,12 +10,12 @@ import WelcomeNotice from "@/components/WelcomeNotice";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/env";
 
-/* DM Serif Display carries the editorial voice; Manrope keeps UI and
+/* Cormorant Garamond carries the editorial voice; Manrope keeps UI and
    body text modern and highly legible on a phone. */
-const dmserif = DM_Serif_Display({
-  variable: "--font-dmserif",
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
   subsets: ["latin"],
-  weight: "400",
+  weight: ["400", "500", "600"],
   display: "swap",
 });
 
@@ -54,7 +54,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${dmserif.variable} ${manrope.variable} antialiased`}>
+      <body className={`${cormorant.variable} ${manrope.variable} antialiased`}>
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-espresso focus:px-5 focus:py-2.5 focus:text-ivory"

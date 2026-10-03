@@ -21,13 +21,13 @@ const CUSTOMER = [
 function Column({ title, links }: { title: string; links: typeof SHOP }) {
   return (
     <div>
-      <p className="eyebrow">{title}</p>
+      <p className="text-[0.85rem] font-semibold text-brass-soft">{title}</p>
       <ul className="mt-4 space-y-2.5">
         {links.map((link) => (
           <li key={link.label}>
             <Link
               href={link.href}
-              className="text-[0.9rem] text-taupe transition-colors hover:text-espresso"
+              className="text-[0.9rem] text-ivory/65 transition-colors hover:text-ivory"
             >
               {link.label}
             </Link>
@@ -55,15 +55,12 @@ const SOCIAL = [
 
 export default function SiteFooter() {
   return (
-    <footer
-      className="mt-28 border-t"
-      style={{ borderColor: "var(--rule)", background: "var(--color-sage)" }}
-    >
-      <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
+    <footer className="mt-20 px-3 pb-3 sm:px-5 sm:pb-5">
+      <div className="mx-auto max-w-[88rem] rounded-[1.75rem] bg-night px-6 py-16 text-ivory sm:px-12">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
-            <p className="wordmark text-2xl text-espresso">Aaya</p>
-            <p className="mt-4 measure-tight font-display text-xl leading-snug text-espresso/85">
+            <p className="wordmark text-2xl text-ivory">Aaya</p>
+            <p className="mt-4 measure-tight font-display text-2xl leading-snug text-ivory/85">
               Find a scent that feels like you.
             </p>
 
@@ -83,11 +80,11 @@ export default function SiteFooter() {
                 placeholder="you@example.com"
                 className="field"
               />
-              <button type="submit" className="btn btn-primary shrink-0">
+              <button type="submit" className="btn btn-brass shrink-0">
                 Subscribe
               </button>
             </form>
-            <p className="mt-2 text-[0.78rem] text-taupe">
+            <p className="mt-2 text-[0.78rem] text-ivory/55">
               A little scent inspiration, straight to your inbox.
             </p>
 
@@ -97,7 +94,7 @@ export default function SiteFooter() {
                   <a
                     href="#"
                     aria-label={s.label}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-line bg-cream text-taupe transition-colors hover:border-sage-mid hover:text-espresso"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-ivory/20 text-ivory/70 transition-colors hover:border-brass hover:text-brass-soft"
                   >
                     <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                       <path d={s.path} />
@@ -113,9 +110,9 @@ export default function SiteFooter() {
           <Column title="Customer" links={CUSTOMER} />
         </div>
 
-        <div className="mt-14 flex flex-col gap-3 border-t pt-7 text-[0.8rem] text-taupe sm:flex-row sm:items-center sm:justify-between" style={{ borderColor: "var(--rule)" }}>
+        <div className="mt-14 flex flex-col gap-3 border-t border-ivory/15 pt-7 text-[0.8rem] text-ivory/55 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Aaya Perfume. All rights reserved.</p>
-          <p>hello@aayaperfume.com · Lagos, Nigeria</p>
+          <p>hello@aayaperfume.com, Lagos, Nigeria</p>
         </div>
       </div>
     </footer>

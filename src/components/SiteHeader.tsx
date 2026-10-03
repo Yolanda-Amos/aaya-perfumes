@@ -10,7 +10,7 @@ export default function SiteHeader({
   user,
   signOut,
 }: {
-  user: { email?: string } | null;
+  user: { email?: string; user_metadata?: Record<string, unknown> } | null;
   signOut: React.ReactNode;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -41,15 +41,26 @@ export default function SiteHeader({
           </Link>
 
           <nav aria-label="Main" className="hidden items-center gap-9 md:flex">
-            {NAV.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-[0.9rem] text-espresso/75 transition-colors hover:text-sage-deep"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {NAV.map((item) =>
+              item.href === "/#quiz" ? (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="rounded-full border px-4 py-1.5 text-[0.88rem] text-espresso transition-colors hover:bg-night hover:text-ivory"
+                  style={{ borderColor: "var(--color-brass)" }}
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="text-[0.9rem] text-espresso/75 transition-colors hover:text-sage-deep"
+                >
+                  {item.label}
+                </Link>
+              )
+            )}
           </nav>
 
           <HeaderActions
