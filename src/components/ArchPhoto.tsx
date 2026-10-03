@@ -26,8 +26,8 @@ export default function ArchPhoto({
   link?: boolean;
   style?: React.CSSProperties;
 }) {
-  const frame = (
-    <div className={`relative ${className}`} style={style}>
+  const inner = (
+    <>
       {outline && <span className="arch-line" aria-hidden="true" />}
       <div
         className="arch h-full w-full"
@@ -46,13 +46,26 @@ export default function ArchPhoto({
           />
         )}
       </div>
-    </div>
+    </>
   );
 
-  if (!link) return frame;
+  // The sizing classes go on the outermost element so width/aspect work
+  // whether or not the arch is wrapped in a link.
+  if (!link) {
+    return (
+      <div className={`relative ${className}`} style={style}>
+        {inner}
+      </div>
+    );
+  }
   return (
-    <Link href={`/fragrance/${product.slug}`} className="group block" aria-label={`View ${product.name}`}>
-      {frame}
+    <Link
+      href={`/fragrance/${product.slug}`}
+      className={`group relative block ${className}`}
+      style={style}
+      aria-label={`View ${product.name}`}
+    >
+      {inner}
     </Link>
   );
 }

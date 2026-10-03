@@ -53,8 +53,8 @@ export default async function RootLayout({
   const firstName = fullName.trim().split(/\s+/)[0] ?? "";
 
   return (
-    <html lang="en">
-      <body className={`${cormorant.variable} ${manrope.variable} antialiased`}>
+    <html lang="en" className={`${cormorant.variable} ${manrope.variable}`}>
+      <body className="antialiased">
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-espresso focus:px-5 focus:py-2.5 focus:text-ivory"
