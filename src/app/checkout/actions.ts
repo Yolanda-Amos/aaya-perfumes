@@ -8,7 +8,7 @@ import {
   type Order,
   type OrderItem,
 } from "@/lib/orders";
-import { sendOrderConfirmation } from "@/lib/send";
+import { activeProvider, sendOrderConfirmation, sendWelcome } from "@/lib/send";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured, isEmailConfigured } from "@/lib/env";
 
@@ -181,6 +181,13 @@ export async function sendTestEmail(
     return { ok: false, message: "Enter an email address we can send to." };
   }
 
+  if (formData.get("kind") === "welcome") {
+    const r = await sendWelcome(email, "Test Customer");
+    return r.sent
+      ? { ok: true, message: `Welcome email sent to ${email} via ${activeProvider()}.` }
+      : { ok: false, message: r.detail ?? `Not sent (${r.reason}).` };
+  }
+
   const first = CATALOGUE[0];
   const second = CATALOGUE[1];
   const items: OrderItem[] = [
@@ -222,14 +229,15 @@ export async function sendTestEmail(
     return {
       ok: false,
       message:
-        result.reason === "provider"
-          ? "Mailgun rejected the message. Check that MAILGUN_DOMAIN and MAILGUN_FROM are on the same domain, and that the API key is active."
-          : "No email provider is configured yet.",
+        result.detail ??
+        (result.reason === "provider"
+          ? `${activeProvider()} rejected the message.`
+          : "No email provider is configured yet."),
     };
   }
 
   return {
     ok: true,
-    message: `Sent to ${email}. This is a sample — no order was saved.`,
+    message: `Sent to ${email} via ${activeProvider()}. This is a sample; no order was saved.`,
   };
 }

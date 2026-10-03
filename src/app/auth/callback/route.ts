@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/env";
 import { isNewAccount, withWelcomeFlag } from "@/lib/auth-notice";
+import { ensureWelcomed } from "@/lib/welcome";
 
 /**
  * Google redirects here after the user consents. Supabase exchanges the
@@ -27,6 +28,8 @@ export async function GET(request: NextRequest) {
       // Only allow same-site relative paths.
       const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : "/";
       const isNew = isNewAccount(data.user?.created_at);
+      // Welcome email, once per account (no-op if already sent).
+      if (data.user) await ensureWelcomed(data.user);
       return NextResponse.redirect(
         new URL(withWelcomeFlag(safeNext, isNew ? "new" : "back"), origin)
       );

@@ -24,9 +24,14 @@ export default function TestEmailForm() {
         placeholder="you@example.com"
       />
 
-      <button type="submit" disabled={pending} className="btn btn-primary" aria-busy={pending}>
-        {pending ? "Sending…" : "Send sample email"}
-      </button>
+      <div className="flex flex-wrap gap-3">
+        <button type="submit" name="kind" value="order" disabled={pending} className="btn btn-primary" aria-busy={pending}>
+          {pending ? "Sending…" : "Send order confirmation"}
+        </button>
+        <button type="submit" name="kind" value="welcome" disabled={pending} className="btn btn-ghost" aria-busy={pending}>
+          Send welcome email
+        </button>
+      </div>
 
       {state.message && (
         <p
@@ -44,7 +49,7 @@ export default function TestEmailForm() {
       )}
 
       <p className="text-[0.8rem] text-taupe">
-        No order is saved. This only sends the email so you can check the design.
+        No order is saved and no account is changed. This only sends the email so you can check delivery and design.
       </p>
     </form>
   );

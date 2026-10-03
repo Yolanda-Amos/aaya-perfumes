@@ -24,7 +24,16 @@ export function useAuth() {
         setSupabase(sb);
         const { data } = await sb.auth.getSession();
         setSession(data.session);
-        const { data: sub } = sb.auth.onAuthStateChange((_e, s) => setSession(s));
+        const { data: sub } = sb.auth.onAuthStateChange((event, s) => {
+          setSession(s);
+          // Welcome email for accounts created on the phone (sent once, ever).
+          if (event === "SIGNED_IN" && s?.access_token) {
+            fetch(`${SITE_URL}/api/account/welcome`, {
+              method: "POST",
+              headers: { Authorization: `Bearer ${s.access_token}` },
+            }).catch(() => {});
+          }
+        });
         unsub = () => sub.subscription.unsubscribe();
       })
       .catch((e: unknown) => setError(e instanceof Error ? e.message : String(e)))
@@ -64,7 +73,8 @@ export function useAuth() {
   }, [supabase]);
 
   const signOut = useCallback(async () => {
-    await supabase?.auth.signOut();
+    // "local" signs out this phone only; the website stays signed in.
+    await supabase?.auth.signOut({ scope: "local" });
   }, [supabase]);
 
   return { supabase, session, ready, error, signInWithGoogle, signOut };

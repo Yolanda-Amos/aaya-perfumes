@@ -14,7 +14,8 @@ export default function SignOutButton({ variant = "link" }: { variant?: "link" |
       disabled={busy}
       onClick={async () => {
         setBusy(true);
-        await createClient().auth.signOut();
+        // "local" ends only this browser's session; the phone stays signed in.
+        await createClient().auth.signOut({ scope: "local" });
         router.refresh();
         router.push("/");
       }}
