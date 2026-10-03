@@ -37,12 +37,20 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  let user: { email?: string } | null = null;
+  let user: { email?: string; user_metadata?: Record<string, unknown> } | null = null;
   if (isSupabaseConfigured) {
     const supabase = await createClient();
     const { data } = await supabase.auth.getUser();
     user = data.user;
   }
+
+  const fullName =
+    typeof user?.user_metadata?.full_name === "string"
+      ? (user.user_metadata.full_name as string)
+      : typeof user?.user_metadata?.name === "string"
+        ? (user.user_metadata.name as string)
+        : "";
+  const firstName = fullName.trim().split(/\s+/)[0] ?? "";
 
   return (
     <html lang="en">
@@ -61,10 +69,11 @@ export default async function RootLayout({
 
           <SiteFooter />
 
-          {/* Confirms a just-created Google account. useSearchParams needs a
-              Suspense boundary here or the build hangs — see AGENTS.md. */}
+          {/* Confirms every Google sign-in (new account, returning, or failed).
+              useSearchParams needs a Suspense boundary here or the build
+              hangs — see AGENTS.md. */}
           <Suspense fallback={null}>
-            <WelcomeNotice />
+            <WelcomeNotice firstName={firstName} email={user?.email ?? ""} />
           </Suspense>
         </CartProvider>
       </body>

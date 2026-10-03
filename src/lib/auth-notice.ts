@@ -26,9 +26,11 @@ export function isNewAccount(createdAt?: string | null, now = Date.now()): boole
  * outlive the redirect or reappear on a later visit — the notice clears the
  * URL as soon as it has been read.
  */
-export function withWelcomeFlag(path: string): string {
+export type WelcomeKind = "new" | "back";
+
+export function withWelcomeFlag(path: string, kind: WelcomeKind = "new"): string {
   const [beforeHash, hash] = path.split("#");
   const separator = beforeHash.includes("?") ? "&" : "?";
-  const flagged = `${beforeHash}${separator}welcome=1`;
+  const flagged = `${beforeHash}${separator}welcome=${kind === "new" ? "1" : "back"}`;
   return hash ? `${flagged}#${hash}` : flagged;
 }

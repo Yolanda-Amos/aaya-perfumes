@@ -6,8 +6,8 @@ import { isNewAccount, withWelcomeFlag } from "@/lib/auth-notice";
 /** Google redirects here after the user consents. Supabase exchanges the
  *  one-time code for a session cookie, then we send them onward.
  *
- *  When this exchange creates a brand-new account we add `welcome=1` to the
- *  destination so the confirmation notice can appear on arrival. */
+ *  We add `welcome=1` (new account) or `welcome=back` (returning customer) to
+ *  the destination so a confirmation notice appears on arrival. */
 export default async function AuthCallbackPage({
   searchParams,
 }: {
@@ -21,10 +21,10 @@ export default async function AuthCallbackPage({
     if (!error) {
       // Only allow same-site relative paths.
       const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : "/";
-      // A first-time signup gets the confirmation; a returning customer does
-      // not, so the notice always means "this account was just created".
+      // Every successful sign-in gets a confirmation: "Account created" for a
+      // first-time signup, "Welcome back" for a returning customer.
       const isNew = isNewAccount(data.user?.created_at);
-      redirect(isNew ? withWelcomeFlag(safeNext) : safeNext);
+      redirect(withWelcomeFlag(safeNext, isNew ? "new" : "back"));
     }
   }
   redirect("/?signin=failed");
