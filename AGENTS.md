@@ -13,7 +13,7 @@ mobile app in `mobile/` that shares the same login, API and cart.
   no env vars and should not be used.
 - Database and auth: Supabase project `kfsgnpysfpqgoungjrty` (eu-west-1).
   Google sign-in through Supabase Auth, for both web and mobile.
-- Email: Mailgun (preferred), Resend, or SMTP; see `lib/send.ts`.
+- Email: Resend only; see `lib/send.ts`.
 - This is the HNG Internship Stage 2 (shop) and Stage 3 (mobile app with
   shared login and instant cart sync) project.
 
@@ -69,7 +69,7 @@ src/
     quiz.ts                 recommend() and derivePersonality(), pure
     orders.ts               order types, totals, free-shipping rule, money()
     mail-template.ts        orderConfirmationEmail(), welcomeEmail(); provider-independent
-    send.ts                 provider switch: Mailgun -> Resend -> SMTP
+    send.ts                 Resend delivery: sendEmail, sendOrderConfirmation, sendWelcome
     welcome.ts              ensureWelcomed(user): sends once, records app_metadata.welcome_sent_at
     auth-notice.ts          isNewAccount(), withWelcomeFlag(path, "new" | "back")
     env.ts                  env access + "is it configured?" checks
@@ -97,7 +97,10 @@ mobile/                     Expo SDK 57 app, see mobile/README.md
   (and `aaya://**` for a standalone build).
 - Sign-out uses `signOut({ scope: "local" })` on both web and mobile, so
   signing out on one device does not sign out the other. Do not change
-  this to the default (global) scope.
+  this to the default (global) scope. Web sign-out does a full reload to
+  `/` so server-rendered UI updates at once; mobile clears its session
+  state immediately. Signing out empties the bag on that device (the
+  account's bag stays in Supabase).
 
 ### How the shared cart works
 - Table `public.cart_items (user_id, slug, qty 1–10, updated_at)`, primary
@@ -108,18 +111,21 @@ mobile/                     Expo SDK 57 app, see mobile/README.md
   `user_id=eq.<uid>`; any change reloads the cart (debounced 120ms).
 - Guests use localStorage; on sign-in the guest cart is merged
   (max of the two quantities) into `cart_items`, then cleared locally.
+- Adding to the bag never opens the drawer; it shows a short "added" toast
+  with a View bag button, so shoppers can add several items in a row.
+- Header shows "Sign in" when signed out and the avatar + first name when
+  signed in.
 
 ### Email
-- `sendEmail()` picks Mailgun when `MAILGUN_DOMAIN` + `MAILGUN_API_KEY` are
-  set, else Resend, else SMTP. Mailgun's API takes **form fields**
-  (URLSearchParams), not JSON. EU domains need `MAILGUN_REGION=eu`.
-- Sandbox Mailgun domains only deliver to Authorized Recipients added in
-  the Mailgun dashboard.
+- Resend only (`lib/send.ts`). Needs `RESEND_API_KEY`; `RESEND_FROM` must be
+  on a domain verified in Resend. Without a verified domain only
+  `onboarding@resend.dev` works, and it delivers only to the Resend
+  account owner's email. Mailgun and SMTP were removed on purpose.
 - Order confirmation: sent by `placeOrder` after the order is saved.
 - Welcome email: `ensureWelcomed(user)` sends once per account and stamps
   `app_metadata.welcome_sent_at` with the admin client. Called by the web
   callback and by `POST /api/account/welcome` (mobile).
-- Check delivery at `/dev/email`: it shows the provider's exact error.
+- Check delivery at `/dev/email`: it shows Resend's exact error.
 
 ## Rules that are easy to break
 
@@ -210,8 +216,8 @@ or the build will hang indefinitely; see `ShopGrid.tsx` and `layout.tsx`.
 
 Copy `.env.example` to `.env.local` (git-ignored). Names only, never values:
 `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
-`NEXT_PUBLIC_SITE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `MAILGUN_API_KEY`,
-`MAILGUN_DOMAIN`, `MAILGUN_FROM`, optional `MAILGUN_REGION`, `RESEND_*`, `SMTP_*`.
+`NEXT_PUBLIC_SITE_URL`, `SUPABASE_SERVICE_ROLE_KEY`,
+`RESEND_API_KEY`, `RESEND_FROM`.
 The mobile app needs none; optional `EXPO_PUBLIC_SITE_URL`.
 
 ## Before you push

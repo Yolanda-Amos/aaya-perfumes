@@ -13,8 +13,8 @@ export default function EmailTestPage() {
       <p className="tag">Developer tool</p>
       <h1 className="mt-2 font-display text-4xl">Send a sample email</h1>
       <p className="mt-4 measure text-cocoa">
-        Sends the real order-confirmation email so you can check how it looks in
-        your inbox. Nothing is saved to the database.
+        Sends the real order confirmation or welcome email through Resend so you
+        can check delivery and design. Nothing is saved to the database.
       </p>
 
       <div className="mt-10">
@@ -25,11 +25,10 @@ export default function EmailTestPage() {
             className="border p-5"
             style={{ borderColor: "var(--rule)", background: "var(--color-sand)" }}
           >
-            <p className="font-medium">No email provider is set up yet</p>
+            <p className="font-medium">Resend is not set up yet</p>
             <p className="mt-2 text-[0.9rem] text-cocoa">
-              Add an email provider to <code>.env.local</code> — Resend is the
-              quickest option, and the free tier covers a small shop. Then restart
-              the server. README section 5 walks through it.
+              Add <code>RESEND_API_KEY</code> (and <code>RESEND_FROM</code>) in Vercel
+              or <code>.env.local</code>, then redeploy.
             </p>
           </div>
         )}

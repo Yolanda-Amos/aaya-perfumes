@@ -160,7 +160,7 @@ export type TestEmailState = {
 /**
  * Sends a sample confirmation to an address without saving an order.
  *
- * Useful for checking the email design and confirming the Mailgun keys
+ * Useful for checking the email design and confirming the Resend key
  * work before anyone has to complete checkout. Builds an order object in
  * memory only — nothing is written to the database.
  */
@@ -172,7 +172,7 @@ export async function sendTestEmail(
     return {
       ok: false,
       message:
-        "No email provider is set up yet. Add one to .env.local — Resend is the quickest — then restart the server. README section 5 walks through it.",
+        "RESEND_API_KEY is not set. Add it in Vercel (or .env.local) and redeploy.",
     };
   }
 

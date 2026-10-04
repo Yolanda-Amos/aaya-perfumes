@@ -16,7 +16,7 @@ function Heart({ filled }: { filled: boolean }) {
 
 /** One fragrance. The image breathes on hover; Add to Cart is revealed. */
 export default function ProductCard({ product }: { product: Product }) {
-  const { add, setOpen } = useCart();
+  const { add } = useCart();
   const [liked, setLiked] = useState(false);
   const out = product.stock === 0;
   const onSale = product.compare_minor > product.price_minor;
@@ -78,7 +78,6 @@ export default function ProductCard({ product }: { product: Product }) {
               type="button"
               onClick={() => {
                 add(product.slug);
-                setOpen(true);
               }}
               className="btn btn-primary w-full text-[0.82rem]"
             >

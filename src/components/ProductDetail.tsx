@@ -21,13 +21,12 @@ const NOTES = (p: Product) =>
 
 /** Product detail: imagery left, buying panel right. */
 export default function ProductDetail({ product }: { product: Product }) {
-  const { add, setOpen } = useCart();
+  const { add } = useCart();
   const [qty, setQty] = useState(1);
   const out = product.stock === 0;
   const onSale = product.compare_minor > product.price_minor;
   const go = () => {
     add(product.slug, qty);
-    setOpen(true);
   };
   const qtyBtn =
     "flex h-10 w-10 items-center justify-center rounded-full text-espresso/70 transition-colors hover:bg-sage disabled:opacity-40";

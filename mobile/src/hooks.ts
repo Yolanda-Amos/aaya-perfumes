@@ -74,7 +74,14 @@ export function useAuth() {
 
   const signOut = useCallback(async () => {
     // "local" signs out this phone only; the website stays signed in.
-    await supabase?.auth.signOut({ scope: "local" });
+    // Clear the session ourselves too, so the screen switches immediately
+    // even if the auth event is slow to arrive.
+    setSession(null);
+    try {
+      await supabase?.auth.signOut({ scope: "local" });
+    } catch {
+      // Already signed out locally; nothing else to do.
+    }
   }, [supabase]);
 
   return { supabase, session, ready, error, signInWithGoogle, signOut };

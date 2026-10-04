@@ -89,6 +89,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [lastAdded, setLastAdded] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  // Bumps on every add so the "Added to bag" toast re-appears each time.
+  const [addTick, setAddTick] = useState(0);
 
   // Latest values for callbacks that write to the database.
   const itemsRef = useRef(items);
@@ -113,8 +115,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if (!isSupabaseConfigured) return;
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null));
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
       setUserId(session?.user?.id ?? null);
+      // Signing out empties the bag on this device; the account's bag
+      // stays saved in Supabase for the next sign-in.
+      if (event === "SIGNED_OUT") {
+        setItems([]);
+        setOpen(false);
+        window.localStorage.removeItem(STORAGE_KEY);
+      }
     });
     return () => sub.subscription.unsubscribe();
   }, []);
@@ -211,6 +220,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           : [...prev, { slug, qty: next }]
       );
       setLastAdded(slug);
+      setAddTick((t) => t + 1);
       void persist(slug, next);
     },
     [persist]
@@ -262,7 +272,46 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     [items, lines, lastAdded, open, add, setQty, remove, clear]
   );
 
-  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+  return (
+    <CartContext.Provider value={value}>
+      {children}
+      {addTick > 0 && lastAdded && !open && (
+        <AddedToast
+          key={addTick}
+          name={CATALOGUE.find((p) => p.slug === lastAdded)?.name ?? "Item"}
+          count={items.reduce((s, i) => s + i.qty, 0)}
+          onView={() => setOpen(true)}
+        />
+      )}
+    </CartContext.Provider>
+  );
+}
+
+/** A small confirmation that stays out of the way, so shoppers can keep adding. */
+function AddedToast({ name, count, onView }: { name: string; count: number; onView: () => void }) {
+  const [shown, setShown] = useState(true);
+  useEffect(() => {
+    const t = window.setTimeout(() => setShown(false), 2600);
+    return () => window.clearTimeout(t);
+  }, []);
+  if (!shown) return null;
+  return (
+    <div
+      className="toast-in pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-4 pb-5 sm:justify-end sm:px-6 sm:pb-6"
+      role="status"
+      aria-live="polite"
+    >
+      <div className="pointer-events-auto flex items-center gap-4 rounded-full bg-night py-2.5 pl-5 pr-2.5 text-ivory shadow-[0_18px_40px_-18px_rgb(0_0_0/.45)]">
+        <span className="text-[0.88rem]">
+          <span className="font-semibold">{name}</span> added
+          <span className="text-ivory/60"> ({count} in bag)</span>
+        </span>
+        <button type="button" onClick={onView} className="btn btn-brass min-h-0 px-4 py-2 text-[0.82rem]">
+          View bag
+        </button>
+      </div>
+    </div>
+  );
 }
 
 export function useCart() {

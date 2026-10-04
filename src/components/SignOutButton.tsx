@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 export default function SignOutButton({ variant = "link" }: { variant?: "link" | "dark" }) {
-  const router = useRouter();
   const [busy, setBusy] = useState(false);
 
   return (
@@ -16,8 +14,9 @@ export default function SignOutButton({ variant = "link" }: { variant?: "link" |
         setBusy(true);
         // "local" ends only this browser's session; the phone stays signed in.
         await createClient().auth.signOut({ scope: "local" });
-        router.refresh();
-        router.push("/");
+        // Full reload so the server-rendered header and profile drop the
+        // signed-in state immediately.
+        window.location.assign("/");
       }}
       className={
         variant === "dark"

@@ -7,7 +7,7 @@
  * `process.env[name]` silently resolves to `undefined` in client bundles,
  * which is why this file inlines the known names by hand.
  *
- * Server-only secrets (SUPABASE_SERVICE_ROLE_KEY, MAILGUN_*) are read the
+ * Server-only secrets (SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY) are read the
  * normal way, since they never need to reach the browser.
  */
 export function env(name: string, fallback = ""): string {
@@ -27,16 +27,8 @@ export const isSupabaseConfigured = Boolean(
   process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
-export const isMailgunConfigured = Boolean(
-  process.env.MAILGUN_DOMAIN && process.env.MAILGUN_API_KEY
-);
-
-/** Any supported email provider. See lib/send.ts for the order of preference. */
-export const isEmailConfigured = Boolean(
-  process.env.RESEND_API_KEY ||
-    (process.env.MAILGUN_DOMAIN && process.env.MAILGUN_API_KEY) ||
-    process.env.SMTP_HOST
-);
+/** Email is sent through Resend; see lib/send.ts. */
+export const isEmailConfigured = Boolean(process.env.RESEND_API_KEY);
 
 /** Public site origin, used for OAuth redirects and email links. */
 export const siteUrl =

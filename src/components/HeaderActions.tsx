@@ -87,7 +87,7 @@ export default function HeaderActions({
           href="/account"
           className="hidden rounded-full px-3 py-2 text-[0.85rem] text-espresso/75 transition-colors hover:bg-sage sm:block"
         >
-          Account
+          Sign in
         </Link>
       )}
 

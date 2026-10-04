@@ -7,7 +7,7 @@ import type { Match } from "@/lib/quiz";
 import { formatPrice, FAMILY_LABEL } from "@/lib/products";
 
 function Hero({ match }: { match: Match }) {
-  const { add, setOpen } = useCart();
+  const { add } = useCart();
   const p = match.product;
   return (
     <div className="mt-10 grid gap-6 lg:grid-cols-[0.85fr_1fr]">
@@ -50,7 +50,6 @@ function Hero({ match }: { match: Match }) {
             type="button"
             onClick={() => {
               add(p.slug);
-              setOpen(true);
             }}
             className="btn btn-primary"
           >
