@@ -23,6 +23,24 @@ as the website (https://aaya-perfume.vercel.app):
    Phone and computer must be on the same Wi-Fi. If they can't be, use
    `npx expo start --tunnel`.
 
+## Install it as a real app (Android APK, no laptop or shared Wi-Fi)
+
+Builds run on Expo's servers (free account at https://expo.dev). From `mobile/`:
+
+```bash
+npm install -g eas-cli        # once (npm.cmd on Windows PowerShell)
+eas login                     # your Expo account
+eas build -p android --profile preview
+```
+
+The first build asks to create an EAS project and an Android keystore:
+answer **Yes** to both. When it finishes (10–20 min) you get a link and QR
+code. Open it on the phone, download the APK and install it (allow
+"install unknown apps" for your browser if Android asks).
+
+The installed app signs in through `aaya://auth-callback`, so add
+`aaya://**` to Supabase Redirect URLs (below). Rebuild after code changes.
+
 ## One-time Supabase setting
 
 Google sign-in returns to the app through an Expo Go link (`exp://…`).
@@ -34,7 +52,11 @@ Add it to Supabase once:
 exp://**
 ```
 
-(Add `aaya://**` too if you later make a standalone build.)
+For the installed APK, also add:
+
+```
+aaya://**
+```
 
 ## Test the live cart
 

@@ -27,6 +27,7 @@ npx tsc --noEmit # typecheck (skips mobile/)
 
 cd mobile && npm install && npx expo start   # mobile app in Expo Go
 cd mobile && npx tsc --noEmit                # mobile typecheck
+cd mobile && eas build -p android --profile preview   # installable APK (Expo cloud)
 ```
 
 On Windows PowerShell, if `npm` is blocked ("running scripts is disabled"),
@@ -94,7 +95,7 @@ mobile/                     Expo SDK 57 app, see mobile/README.md
 - Supabase -> Authentication -> URL Configuration must list:
   Site URL `https://aaya-perfume.vercel.app`; Redirect URLs
   `https://aaya-perfume.vercel.app/**`, `http://localhost:3000/**`, `exp://**`
-  (and `aaya://**` for a standalone build).
+  and `aaya://**` (the installed APK; package `com.aaya.perfume`).
 - Sign-out uses `signOut({ scope: "local" })` on both web and mobile, so
   signing out on one device does not sign out the other. Do not change
   this to the default (global) scope. Web sign-out does a full reload to
