@@ -97,6 +97,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   itemsRef.current = items;
   const userRef = useRef(userId);
   userRef.current = userId;
+  // True while `items` holds the signed-in account's bag. That bag must
+  // never be copied into localStorage, or it would survive sign-out.
+  const accountCart = useRef(false);
 
   // Load the guest cart after mount so server HTML and first render agree.
   useEffect(() => {
@@ -106,7 +109,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   // Guests persist to localStorage; signed-in carts live in Supabase.
   useEffect(() => {
-    if (!hydrated || userId) return;
+    if (!hydrated || userId || accountCart.current) return;
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }, [items, hydrated, userId]);
 
@@ -120,6 +123,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       // Signing out empties the bag on this device; the account's bag
       // stays saved in Supabase for the next sign-in.
       if (event === "SIGNED_OUT") {
+        accountCart.current = false;
         setItems([]);
         setOpen(false);
         window.localStorage.removeItem(STORAGE_KEY);
@@ -140,7 +144,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         .from("cart_items")
         .select("slug, qty")
         .order("updated_at", { ascending: true });
-      if (!cancelled) setItems(cleanRows(data as Row[] | null));
+      if (!cancelled) {
+        accountCart.current = true;
+        setItems(cleanRows(data as Row[] | null));
+      }
     }
 
     async function start() {
@@ -312,6 +319,15 @@ function AddedToast({ name, count, onView }: { name: string; count: number; onVi
       </div>
     </div>
   );
+}
+
+/** Empties this browser's bag. Called on sign-out, before the page reloads. */
+export function clearLocalCart() {
+  try {
+    window.localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    // Storage blocked (private mode); nothing to clear.
+  }
 }
 
 export function useCart() {

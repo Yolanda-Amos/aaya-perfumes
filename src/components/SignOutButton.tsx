@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { clearLocalCart } from "@/components/CartProvider";
 
 export default function SignOutButton({ variant = "link" }: { variant?: "link" | "dark" }) {
   const [busy, setBusy] = useState(false);
@@ -13,7 +14,9 @@ export default function SignOutButton({ variant = "link" }: { variant?: "link" |
       onClick={async () => {
         setBusy(true);
         // "local" ends only this browser's session; the phone stays signed in.
+        clearLocalCart();
         await createClient().auth.signOut({ scope: "local" });
+        clearLocalCart();
         // Full reload so the server-rendered header and profile drop the
         // signed-in state immediately.
         window.location.assign("/");
