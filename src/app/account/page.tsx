@@ -108,7 +108,6 @@ export default async function AccountPage() {
             {fullName && <p className="mt-2 text-[0.95rem] text-ivory/80">{fullName}</p>}
             <p className="mt-0.5 truncate text-[0.88rem] text-ivory/60">{user.email}</p>
           </div>
-          <SignOutButton variant="dark" />
         </div>
 
         <dl className="mt-9 grid grid-cols-3 gap-px overflow-hidden rounded-2xl bg-ivory/10 text-center">
@@ -123,7 +122,10 @@ export default async function AccountPage() {
             </div>
           ))}
         </dl>
-        <p className="mt-5 text-[0.8rem] text-ivory/55">Signed in with Google</p>
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
+          <p className="text-[0.8rem] text-ivory/55">Signed in with Google</p>
+          <SignOutButton variant="dark" />
+        </div>
       </section>
 
       <h2 className="mt-14 border-b pb-3 font-display text-3xl" style={{ borderColor: "var(--rule)" }}>

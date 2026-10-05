@@ -69,8 +69,9 @@ export default function ProductCard({ product }: { product: Product }) {
           </p>
         )}
 
-        {/* Always visible on touch; revealed on hover for pointers. */}
-        <div className="absolute inset-x-3 bottom-3 transition-opacity duration-300 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100">
+        {/* Large screens: revealed over the photo on hover. On phones the
+            button sits below the card instead, so it never hides the bottle. */}
+        <div className="absolute inset-x-3 bottom-3 hidden opacity-0 transition-opacity duration-300 md:block md:group-hover:opacity-100 md:group-focus-within:opacity-100">
           {out ? (
             <span className="btn btn-ghost w-full cursor-not-allowed bg-cream/90 text-[0.82rem]">Sold out</span>
           ) : (
@@ -118,16 +119,31 @@ export default function ProductCard({ product }: { product: Product }) {
           </div>
         </div>
 
-        <div className="mt-auto flex items-baseline justify-between gap-3 pt-4">
+        <div className="mt-auto flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 pt-4">
           <p className="text-[0.95rem]">
             {onSale && (
-              <span className="mr-1.5 text-taupe line-through">
+              <span className="mr-1.5 text-[0.82rem] text-taupe line-through">
                 {formatPrice(product.compare_minor)}
               </span>
             )}
             <span className="font-medium">{formatPrice(product.price_minor)}</span>
           </p>
           <p className="text-[0.78rem] text-taupe">{product.size_ml}ml</p>
+        </div>
+
+        {/* Phones: a full-width button under the price. */}
+        <div className="mt-3 md:hidden">
+          {out ? (
+            <span className="btn btn-ghost w-full cursor-not-allowed px-3 text-[0.82rem]">Sold out</span>
+          ) : (
+            <button
+              type="button"
+              onClick={() => add(product.slug)}
+              className="btn btn-primary w-full px-3 text-[0.82rem]"
+            >
+              Add to bag
+            </button>
+          )}
         </div>
       </div>
     </article>
