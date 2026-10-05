@@ -171,13 +171,13 @@ into the SQL editor). Do not assume a GitHub integration will apply it.
 must be `relative` with `overflow-hidden`, or the photo escapes and covers
 the page (this happened on the quiz result).
 
-**12. Never reuse one FlatList for both app tabs.** Changing `numColumns`
-on a mounted FlatList throws and closes the release app. Give each tab's
-list its own `key`.
-
 **11. Font variables go on `<html>`.** Tailwind's `@theme` resolves
 `--font-display` at `:root`; next/font variables set on `<body>` are
 undefined there and every page falls back to the system font.
+
+**12. Never reuse one FlatList for both app tabs.** Changing `numColumns`
+on a mounted FlatList throws and closes the release app. Give each tab's
+list its own `key`.
 
 ## Design system
 
