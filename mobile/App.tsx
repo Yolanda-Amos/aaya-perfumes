@@ -139,6 +139,7 @@ function Shop({ auth }: { auth: Auth }) {
 
       {tab === "shop" ? (
         <FlatList
+          key="shop-grid"
           data={products}
           keyExtractor={(p) => p.slug}
           numColumns={2}
@@ -155,7 +156,7 @@ function Shop({ auth }: { auth: Auth }) {
             const inBag = cart.items.find((i) => i.slug === item.slug)?.qty ?? 0;
             return (
               <View style={s.card}>
-                <View style={[s.arch, { backgroundColor: tint(item.hue) }]}>
+                <View style={[s.arch, { borderColor: tint(item.hue) }]}>
                   {item.image && <Image source={{ uri: item.image }} style={s.archImg} resizeMode="contain" />}
                 </View>
                 <Text style={[serif, s.cardName]}>{item.name}</Text>
@@ -175,6 +176,7 @@ function Shop({ auth }: { auth: Auth }) {
         />
       ) : (
         <FlatList
+          key="bag-list"
           data={lines}
           keyExtractor={(l) => l.product.slug}
           contentContainerStyle={{ padding: 16, gap: 12, paddingBottom: 40, flexGrow: 1 }}
@@ -188,7 +190,7 @@ function Shop({ auth }: { auth: Auth }) {
           }
           renderItem={({ item }) => (
             <View style={s.line}>
-              <View style={[s.thumb, { backgroundColor: tint(item.product.hue) }]}>
+              <View style={[s.thumb, { borderColor: tint(item.product.hue) }]}>
                 {item.product.image && (
                   <Image source={{ uri: item.product.image }} style={s.thumbImg} resizeMode="contain" />
                 )}
@@ -238,9 +240,9 @@ function Step({ label, onPress }: { label: string; onPress: () => void }) {
   );
 }
 
-/** A light wash of the product's tint. */
+/** The product's tint, softened, for the frame outline. */
 function tint(hex: string): string {
-  return hex + "33";
+  return hex + "66";
 }
 
 const s = StyleSheet.create({
@@ -312,8 +314,10 @@ const s = StyleSheet.create({
     overflow: "hidden",
     alignItems: "center",
     justifyContent: "flex-end",
+    backgroundColor: "#ffffff",
+    borderWidth: 2,
   },
-  archImg: { width: "80%", height: "78%" },
+  archImg: { width: "100%", height: "86%" },
   cardName: { fontSize: 20, color: color.espresso, marginTop: 10 },
   cardBlurb: { fontSize: 12, color: color.taupe, marginTop: 2, minHeight: 32 },
   price: { fontSize: 14, color: color.espresso, fontWeight: "600", marginTop: 6 },
@@ -336,8 +340,17 @@ const s = StyleSheet.create({
     borderColor: color.line,
     padding: 12,
   },
-  thumb: { width: 72, height: 92, borderRadius: 14, overflow: "hidden", alignItems: "center", justifyContent: "center" },
-  thumbImg: { width: "85%", height: "85%" },
+  thumb: {
+    width: 72,
+    height: 92,
+    borderRadius: 14,
+    overflow: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#ffffff",
+    borderWidth: 2,
+  },
+  thumbImg: { width: "92%", height: "92%" },
   stepper: { flexDirection: "row", alignItems: "center", gap: 10, marginTop: 10 },
   stepBtn: {
     width: 40,
